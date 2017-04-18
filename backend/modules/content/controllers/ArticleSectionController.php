@@ -94,7 +94,7 @@ class ArticleSectionController extends Controller
      */
     public function actionDelete($id = null)
     {
-        $id = Yii::$app->request->isAjax?Yii::$app->request->post('id'):$id;
+        $id = Yii::$app->request->post('id', $id);
         $sectionPictures = ArticleSectionPicture::find()->where(['section_id'=>$id])->all();
         if($sectionPictures!=null){
             foreach($sectionPictures as $item){
@@ -115,8 +115,8 @@ class ArticleSectionController extends Controller
      */
     public function actionDeletePicture($id = null)
     {
-        $id = Yii::$app->request->isAjax?Yii::$app->request->post('id'):$id;
-        $model=$this->findModel($id);
+        $id = Yii::$app->request->post('id', $id);
+        $model= ArticleSectionPicture::findOne($id);
         $picture = Picture::findOne($model->picture_id);
         $picture->status = Picture::STATUS_DISABLE;
         $picture->save();
