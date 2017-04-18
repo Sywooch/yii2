@@ -5438,7 +5438,7 @@ CREATE TABLE `yii_trade_logistical` (
   `logistical_sn` tinyint(4) NOT NULL COMMENT '物流单号',
   `logistical_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '物流状态0待发货，1已发货，3已收货，4拒收货，5货物丢失，6已退货',
   `created_at` int(11) NOT NULL COMMENT '创建时间',
-  `update_at` int(11) NOT NULL COMMENT '更新时间'
+  `updated_at` int(11) NOT NULL COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发货表';
 
 -- --------------------------------------------------------
