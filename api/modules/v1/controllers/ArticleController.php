@@ -79,7 +79,7 @@ class ArticleController extends RangerController implements RangerInterface
                             $record = $picture->attributes;
                             unset($record['id'], $record['article_id'], $record['section_id']);
                             if (isset($picture->picture) && $picture->picture != null) {
-                                $record['url'] = $picture->picture->url;
+                                $record['url'] = $picture->picture->path;
                             }
                             $result['sections'][$key]['pictures'][] = $record;
                         }
