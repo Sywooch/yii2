@@ -74,6 +74,7 @@ class RangerController extends Controller
         return $result;
     }
 
+    // API 项目内调用接口
     public static function api($method, array $query, $params = [], $type='post')
     {
         $params['method'] = $method;

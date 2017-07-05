@@ -4,7 +4,7 @@ namespace frontend\traits;
 use yii;
 use common\components\ranger\RangerApi;
 
-Trait RangerTrait
+trait RangerTrait
 {
     public static function api($method, array $query, $params = [], $type='post')
     {

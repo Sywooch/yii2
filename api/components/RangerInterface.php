@@ -3,7 +3,7 @@ namespace api\components;
 
 use yii;
 
-interface Ranger
+interface RangerInterface
 {
     public function actionList(array $params);
 

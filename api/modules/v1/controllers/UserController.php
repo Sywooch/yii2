@@ -5,10 +5,10 @@ namespace api\modules\v1\controllers;
 use yii;
 use common\models\User;
 use api\controllers\RangerController;
-use api\components\Ranger;
+use api\components\RangerInterface;
 use api\components\RangerException;
 
-class UserController extends RangerController implements Ranger
+class UserController extends RangerController implements RangerInterface
 {
     
     public function actionLogin(array $params)

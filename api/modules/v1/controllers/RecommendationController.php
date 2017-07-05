@@ -5,13 +5,13 @@ namespace backend\modules\content\controllers;
 use yii;
 use api\controllers\RangerController;
 use yii\data\Pagination;
-use api\components\Ranger;
+use api\components\RangerInterface;
 use api\components\RangerException;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
  */
-class RecommendationController extends RangerController implements Ranger
+class RecommendationController extends RangerController implements RangerInterface
 {
     public function actionList(array $params)
     {
