@@ -2,16 +2,18 @@
 namespace html5\controllers;
 
 use yii;
+use yii\web\Controller;
+use html5\traits\RangerTrait;
 
 /**
  * Ranger controller
  */
-class ExampleController extends RangerController
+class ExampleController extends Controller
 {
 
     public function actionUserLogin()
     {
-        print_r(parent::api('ranger.user.login',[
+        print_r(RangerTrait::api('ranger.user.login',[
             'username'=>'STARR',
             'password'=>'123456',
         ]));
@@ -19,7 +21,7 @@ class ExampleController extends RangerController
 
     public function actionUserList()
     {
-        print_r(parent::api('ranger.user.list',
+        print_r(RangerTrait::api('ranger.user.list',
             [
                 'page_size' => 10,
                 'page' => 1,
@@ -40,7 +42,7 @@ class ExampleController extends RangerController
 
     public function actionUserCreate()
     {
-        print_r(parent::api('ranger.user.create',[
+        print_r(RangerTrait::api('ranger.user.create',[
             'username' => 'STARR',
             'password' => '123456',
             'email' => '67218315@qq.com',
@@ -50,7 +52,7 @@ class ExampleController extends RangerController
 
     public function actionUserUpdate()
     {
-        print_r(parent::api('ranger.user.update',[
+        print_r(RangerTrait::api('ranger.user.update',[
             'username' => 'STARR',
             'access_token' => '0mcZIy285iWeFXiJV9ArhrMQinlMcCwZ',
         ]));
@@ -58,7 +60,7 @@ class ExampleController extends RangerController
 
     public function actionUserDelete()
     {
-        print_r(parent::api('ranger.user.delete',[
+        print_r(RangerTrait::api('ranger.user.delete',[
             'username' => 'STARR',
             'access_token' => '0mcZIy285iWeFXiJV9ArhrMQinlMcCwZ',
         ]));
@@ -66,7 +68,7 @@ class ExampleController extends RangerController
 
     public function actionMenuList()
     {
-        print_r(parent::api('ranger.menu.list',
+        print_r(RangerTrait::api('ranger.menu.list',
             [],
             [
                 'format' => 'json',
@@ -77,7 +79,7 @@ class ExampleController extends RangerController
 
     public function actionMenuDetail()
     {
-        print_r(parent::api('ranger.menu.detail',
+        print_r(RangerTrait::api('ranger.menu.detail',
             [
                 'where' => [
                     'id' => 1
@@ -88,7 +90,7 @@ class ExampleController extends RangerController
 
     public function actionPageList()
     {
-        print_r(parent::api('ranger.page.list',
+        print_r(RangerTrait::api('ranger.page.list',
             [],
             [
                 'format' => 'json',
@@ -99,7 +101,7 @@ class ExampleController extends RangerController
 
     public function actionPageDetail()
     {
-        print_r(parent::api('ranger.page.detail',
+        print_r(RangerTrait::api('ranger.page.detail',
             [
                 'where' => [
                     'id' => 1
@@ -110,7 +112,7 @@ class ExampleController extends RangerController
 
     public function actionArticleList()
     {
-        print_r(parent::api('ranger.article.list',
+        print_r(RangerTrait::api('ranger.article.list',
             [
                 'page_size' => 10,
                 'page' => 1,
@@ -130,7 +132,7 @@ class ExampleController extends RangerController
 
     public function actionArticleDetail()
     {
-        print_r(parent::api('ranger.article.detail',[
+        print_r(RangerTrait::api('ranger.article.detail',[
             'where'=>[
                 'id' => 1
             ]
@@ -139,6 +141,6 @@ class ExampleController extends RangerController
 
     public function actionArticleCategoryList()
     {
-        print_r(parent::api('ranger.article-category.list',[]));
+        print_r(RangerTrait::api('ranger.article-category.list',[]));
     }
 }

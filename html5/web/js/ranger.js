@@ -4,7 +4,7 @@ var Ranger = Ranger || {};
  * API类目
  */
 Ranger.api = {
-    url:'/site/api',
+    url:'/ranger/api',
     //Ranger API
     request:function(method, query, params){
         $.ajax({

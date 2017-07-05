@@ -11,11 +11,12 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\web\Controller;
 
 /**
  * Site controller
  */
-class SiteController extends RangerController
+class SiteController extends Controller
 {
     /**
      * @inheritdoc
@@ -66,27 +67,6 @@ class SiteController extends RangerController
                 'successCallback' => [$this, 'successCallback'],
             ],
         ];
-    }
-
-    /**
-     * AJAX API统一入口
-     */
-    public function actionApi()
-    {
-        $method = Yii::$app->request->post('method');
-        $query = Yii::$app->request->post('query') != null? Yii::$app->request->post('query'):[];
-        $params = Yii::$app->request->post('params') != null? Yii::$app->request->post('params'):[];
-        $params['format'] = 'json';
-        print_r(parent::api($method, $query, $params));
-        Yii::$app->end();
-    }
-
-    /**
-     * AJAX API测试
-     */
-    public function actionRanger()
-    {
-        return $this->render('ranger');
     }
 
     /**

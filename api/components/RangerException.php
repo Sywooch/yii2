@@ -28,7 +28,7 @@ class RangerException extends HttpException
     const APP_FORBID_UPDATE = 10404;
     const APP_FORBID_DELETE = 10405;
 
-    private function getExceptionMessage($code)
+    private static function getExceptionMessage($code)
     {
         $messages = [
             self::SYS_EMPTY_SIGN => '该请求需要签名',

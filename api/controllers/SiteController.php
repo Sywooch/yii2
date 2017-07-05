@@ -56,6 +56,9 @@ class SiteController extends RangerController
     public function beforeAction($action)
     {
         $this->start = explode(' ',microtime());
+        if(!Yii::$app->request->post('method')){
+            RangerException::throwException(RangerException::APP_ERROR_PARAMS);
+        }
         if(!Yii::$app->request->post('sign')){
             RangerException::throwException(RangerException::SYS_EMPTY_SIGN,'',401);
         }

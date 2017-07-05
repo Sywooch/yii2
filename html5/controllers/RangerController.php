@@ -3,7 +3,7 @@ namespace html5\controllers;
 
 use yii;
 use yii\web\Controller;
-use common\components\ranger\RangerApi;
+use html5\traits\RangerTrait;
 
 /**
  * Ranger controller
@@ -11,17 +11,24 @@ use common\components\ranger\RangerApi;
 class RangerController extends Controller
 {
 
-    public static function api($method, array $query, $params = [], $type='post')
+    /**
+     * AJAX API统一入口
+     */
+    public function actionApi()
     {
-        $params['method'] = $method;
-        $params['params'] = $query;
+        $method = Yii::$app->request->post('method');
+        $query = Yii::$app->request->post('query') != null? Yii::$app->request->post('query'):[];
+        $params = Yii::$app->request->post('params') != null? Yii::$app->request->post('params'):[];
+        $params['format'] = 'json';
+        print_r(RangerTrait::api($method, $query, $params));
+        Yii::$app->end();
+    }
 
-        $params['key'] = Yii::$app->params['ranger.key'];
-        $params['secret'] = Yii::$app->params['ranger.secret'];
-        $params['device'] = 'computer';
-        $params['device_id'] = '';
-        $params['origin'] = 'html5';
-
-        return RangerApi::request($params, $type);
+    /**
+     * AJAX API测试
+     */
+    public function actionJavascript()
+    {
+        return $this->render('javascript');
     }
 }
