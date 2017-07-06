@@ -21,7 +21,8 @@ class SiteController extends RangerController
     public function actionIndex()
     {
         $method = Yii::$app->request->post('method');
-        $version = explode('.',Yii::$app->request->post('version'))[0];
+        $version = explode('.',Yii::$app->request->post('version'));
+        $version = $version[0];
         $params['query'] = Yii::$app->request->post('params');
         $params['query'] = empty($params['query'])?[]:$params['query'];
 
