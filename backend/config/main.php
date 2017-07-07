@@ -23,6 +23,9 @@ return [
         'product' => [
             'class' => 'backend\modules\product\Module',
         ],
+        'business' => [
+            'class' => 'backend\modules\business\Module',
+        ],
         'gridview' =>  [
             'class' => '\kartik\grid\Module',
         ],
