@@ -81,4 +81,14 @@ class TradeOrder extends \yii\db\ActiveRecord
             'updated_at' => '订单修改时间',
         ];
     }
+
+    public function getTrade()
+    {
+        return $this->hasOne(Trade::className(), ['trade_no' => 'trade_no']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
 }

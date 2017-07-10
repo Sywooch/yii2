@@ -62,10 +62,11 @@
                         'icon' => 'fa fa-shopping-cart',
                         'url' => '#',
                         'items' => [
-                            ['label' => '订单管理', 'icon' => 'fa fa-credit-card text-purple', 'url' => ['/business/trade/index']],
+                            ['label' => '交易管理', 'icon' => 'fa fa-paypal text-purple', 'url' => ['/business/trade/index']],
+                            ['label' => '订单管理', 'icon' => 'fa fa-google-wallet text-purple', 'url' => ['/business/trade-order/index']],
+                            ['label' => '支付纪录', 'icon' => 'fa fa-calendar text-purple', 'url' => ['/business/trade-payment/index']],
                             ['label' => '物流管理', 'icon' => 'fa fa-paper-plane text-purple', 'url' => ['/business/trade-logistical/index']],
                             ['label' => '退款纪录', 'icon' => 'fa fa-refresh text-purple', 'url' => ['/business/trade-refund/index']],
-                            ['label' => '支付纪录', 'icon' => 'fa fa-cc-visa text-purple', 'url' => ['/business/trade-payment/index']],
                         ],
                     ],
                     ['label' => '用户&权限', 'options' => ['class' => 'header']],

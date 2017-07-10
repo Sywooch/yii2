@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'payment_satus') ?>
 
-    <?php // echo $form->field($model, 'distribution_status') ?>
+    <?php // echo $form->field($model, 'logistical_status') ?>
 
     <?php // echo $form->field($model, 'total_amount') ?>
 
@@ -37,7 +37,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'discount_amount') ?>
 
-    <?php // echo $form->field($model, 'distribution_amount') ?>
+    <?php // echo $form->field($model, 'logistical_amount') ?>
 
     <?php // echo $form->field($model, 'point_amount') ?>
 

@@ -20,7 +20,7 @@ class TradeSearch extends Trade
         return [
             [['id', 'user_id', 'trade_status', 'payment_id', 'payment_status', 'logistical_status', 'earn_point', 'cancel_reason', 'paid_at', 'rated_at', 'created_at', 'updated_at'], 'integer'],
             [['trade_no', 'contact_name', 'contact_phone', 'contact_address', 'contact_postcode', 'user_remark'], 'safe'],
-            [['total_amount', 'paid_amount', 'balance_amount', 'discount_amount', 'distribution_amount', 'point_amount', 'refund_amount'], 'number'],
+            [['total_amount', 'paid_amount', 'balance_amount', 'discount_amount', 'logistical_amount', 'point_amount', 'refund_amount'], 'number'],
         ];
     }
 
@@ -70,7 +70,7 @@ class TradeSearch extends Trade
             'paid_amount' => $this->paid_amount,
             'balance_amount' => $this->balance_amount,
             'discount_amount' => $this->discount_amount,
-            'distribution_amount' => $this->distribution_amount,
+            'logistical_amount' => $this->logistical_amount,
             'point_amount' => $this->point_amount,
             'refund_amount' => $this->refund_amount,
             'earn_point' => $this->earn_point,

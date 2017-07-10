@@ -20,7 +20,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $paid_amount
  * @property string $balance_amount
  * @property string $discount_amount
- * @property string $distribution_amount
+ * @property string $logistical_amount
  * @property string $point_amount
  * @property string $refund_amount
  * @property integer $earn_point
@@ -48,6 +48,13 @@ class Trade extends \yii\db\ActiveRecord
     const PAYMENT_HAS_PAID = 2;
     const PAYMENT_IS_FAILED = 3;
 
+    const LOGISTICAL_WAIT_EXPRESS = 1;
+    const LOGISTICAL_HAS_EXPRESS = 2;
+    const LOGISTICAL_TAKE_DELIVERY = 3;
+    const LOGISTICAL_REFUSE_DELIVERY = 4;
+    const LOGISTICAL_LOST_GOODS = 5;
+    const LOGISTICAL_RETURN_GOODS = 6;
+
     /**
      * @inheritdoc
      */
@@ -69,9 +76,9 @@ class Trade extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'trade_status', 'payment_id', 'payment_status', 'distribution_status', 'earn_point', 'cancel_reason', 'paid_at', 'rated_at', 'created_at', 'updated_at'], 'integer'],
+            [['user_id', 'trade_status', 'payment_id', 'payment_status', 'logistical_status', 'earn_point', 'cancel_reason', 'paid_at', 'rated_at', 'created_at', 'updated_at'], 'integer'],
             [['trade_status', 'payment_id', 'payment_status', 'user_remark', 'created_at', 'updated_at'], 'required'],
-            [['total_amount', 'paid_amount', 'balance_amount', 'discount_amount', 'distribution_amount', 'point_amount', 'refund_amount'], 'number'],
+            [['total_amount', 'paid_amount', 'balance_amount', 'discount_amount', 'logistical_amount', 'point_amount', 'refund_amount'], 'number'],
             [['user_remark'], 'string'],
             [['trade_no'], 'string', 'max' => 32],
             [['contact_name'], 'string', 'max' => 64],
@@ -88,7 +95,7 @@ class Trade extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'trade_no' => '订单编号',
-            'user_id' => 'User ID',
+            'user_id' => '用户编号',
             'trade_status' => '交易状态', //1待付款，2已付款，3已取消，4退款中，5已退款，6已完成
             'payment_id' => '支付凭证编号',
             'payment_status' => '支付状态', //同支付表中的支付状态 1未支付，2已支付，3支付异常
@@ -97,7 +104,7 @@ class Trade extends \yii\db\ActiveRecord
             'paid_amount' => '已付金额',
             'balance_amount' => '余额支付金额',
             'discount_amount' => '优惠金额',
-            'distribution_amount' => '配送费用',
+            'logistical_amount' => '配送费用',
             'point_amount' => '积分抵用金额',
             'refund_amount' => '退款金额',
             'earn_point' => '获得积分',
@@ -114,7 +121,7 @@ class Trade extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getTradeStatusOptions($trade_status = null)
+    public static function getTradeStatusOptions($trade_status = null)
     {
         $arr = [
             self::TRADE_WAIT_PAY => '待付款',
@@ -131,7 +138,7 @@ class Trade extends \yii\db\ActiveRecord
         }
     }
 
-    public function getPaymentStatusOptions($payment_status = null)
+    public static function getPaymentStatusOptions($payment_status = null)
     {
         $arr = [
             self::PAYMENT_WAIT_PAY => '已支付',
@@ -142,5 +149,32 @@ class Trade extends \yii\db\ActiveRecord
         }else{
             return isset($arr[$payment_status]) ? $arr[$payment_status] : $payment_status;
         }
+    }
+
+    public static function getLogisticalStatusOptions($logistical_status = null)
+    {
+        $arr = [
+            self::LOGISTICAL_WAIT_EXPRESS => '待发货',
+            self::LOGISTICAL_HAS_EXPRESS => '已发货',
+            self::LOGISTICAL_TAKE_DELIVERY => '已收货',
+            self::LOGISTICAL_REFUSE_DELIVERY => '拒收货',
+            self::LOGISTICAL_LOST_GOODS => '货物丢失',
+            self::LOGISTICAL_RETURN_GOODS => '已退货',
+        ];
+        if( $logistical_status === null ){
+            return $arr;
+        }else{
+            return isset($arr[$logistical_status]) ? $arr[$logistical_status] : $logistical_status;
+        }
+    }
+
+    public function getOrders()
+    {
+        return $this->hasMany(TradeOrder::className(), ['trade_no' => 'trade_no']);
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 }

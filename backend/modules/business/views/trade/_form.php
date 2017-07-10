@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'payment_satus')->textInput() ?>
 
-    <?= $form->field($model, 'distribution_status')->textInput() ?>
+    <?= $form->field($model, 'logistical_status')->textInput() ?>
 
     <?= $form->field($model, 'total_amount')->textInput(['maxlength' => true]) ?>
 
@@ -32,7 +32,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'discount_amount')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'distribution_amount')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'logistical_amount')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'point_amount')->textInput(['maxlength' => true]) ?>
 

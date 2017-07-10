@@ -5,28 +5,30 @@ namespace backend\modules\business\controllers;
 use Yii;
 use common\models\Trade;
 use common\models\TradeSearch;
-use yii\web\Controller;
+use backend\controllers\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * TradeController implements the CRUD actions for Trade model.
  */
 class TradeController extends Controller
 {
+    private $auth = '交易管理';
     /**
      * @inheritdoc
      */
     public function behaviors()
     {
-        return [
+        return ArrayHelper::merge([
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
                 ],
             ],
-        ];
+        ],parent::behaviors());
     }
 
     /**
@@ -52,6 +54,19 @@ class TradeController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Displays a expand Trade model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDetail($id)
+    {
+        $this->layout = false;
+        return $this->render('detail', [
             'model' => $this->findModel($id),
         ]);
     }
