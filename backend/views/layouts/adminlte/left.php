@@ -30,7 +30,7 @@
             [
                 'options' => ['class' => 'sidebar-menu'],
                 'items' => [
-                    ['label' => '内容管理', 'options' => ['class' => 'header']],
+                    ['label' => '内容', 'options' => ['class' => 'header']],
                     [
                         'label' => '内容管理',
                         'icon' => 'fa fa-th-large',
@@ -44,6 +44,7 @@
                             ['label' => '推荐管理', 'icon' => 'fa fa-rocket text-light-blue', 'url' => ['/content/recommendation-category/index']],
                         ],
                     ],
+                    ['label' => '商品', 'options' => ['class' => 'header']],
                     [
                         'label' => '商品管理',
                         'icon' => 'fa fa-tags',
@@ -55,19 +56,19 @@
                             ['label' => 'SKU管理', 'icon' => 'fa fa-globe text-maroon', 'url' => ['/product/goods-attribute']],
                         ],
                     ],
-                    ['label' => '交易管理', 'options' => ['class' => 'header']],
+                    ['label' => '交易', 'options' => ['class' => 'header']],
                     [
                         'label' => '交易管理',
                         'icon' => 'fa fa-shopping-cart',
                         'url' => '#',
                         'items' => [
-                            ['label' => '订单管理', 'icon' => 'fa fa-credit-card text-purple', 'url' => '/business/trade/index'],
-                            ['label' => '物流管理', 'icon' => 'fa fa-paper-plane text-purple', 'url' => '/business/trade-logistical/index'],
-                            ['label' => '退款纪录', 'icon' => 'fa fa-refresh text-purple', 'url' => '/business/trade-refund/index'],
-                            ['label' => '支付纪录', 'icon' => 'fa fa-cc-visa text-purple', 'url' => '/business/trade-payment/index'],
+                            ['label' => '订单管理', 'icon' => 'fa fa-credit-card text-purple', 'url' => ['/business/trade/index']],
+                            ['label' => '物流管理', 'icon' => 'fa fa-paper-plane text-purple', 'url' => ['/business/trade-logistical/index']],
+                            ['label' => '退款纪录', 'icon' => 'fa fa-refresh text-purple', 'url' => ['/business/trade-refund/index']],
+                            ['label' => '支付纪录', 'icon' => 'fa fa-cc-visa text-purple', 'url' => ['/business/trade-payment/index']],
                         ],
                     ],
-                    ['label' => '用户权限', 'options' => ['class' => 'header']],
+                    ['label' => '用户&权限', 'options' => ['class' => 'header']],
                     [
                         'label' => '用户管理',
                         'icon' => 'fa fa-graduation-cap',
