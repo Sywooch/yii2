@@ -18,7 +18,7 @@ class TradeSearch extends Trade
     public function rules()
     {
         return [
-            [['id', 'user_id', 'trade_status', 'payment_id', 'payment_status', 'distribution_status', 'earn_point', 'cancel_reason', 'paid_at', 'rated_at', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'user_id', 'trade_status', 'payment_id', 'payment_status', 'logistical_status', 'earn_point', 'cancel_reason', 'paid_at', 'rated_at', 'created_at', 'updated_at'], 'integer'],
             [['trade_no', 'contact_name', 'contact_phone', 'contact_address', 'contact_postcode', 'user_remark'], 'safe'],
             [['total_amount', 'paid_amount', 'balance_amount', 'discount_amount', 'distribution_amount', 'point_amount', 'refund_amount'], 'number'],
         ];
@@ -65,7 +65,7 @@ class TradeSearch extends Trade
             'trade_status' => $this->trade_status,
             'payment_id' => $this->payment_id,
             'payment_status' => $this->payment_status,
-            'distribution_status' => $this->distribution_status,
+            'logistical_status' => $this->logistical_status,
             'total_amount' => $this->total_amount,
             'paid_amount' => $this->paid_amount,
             'balance_amount' => $this->balance_amount,

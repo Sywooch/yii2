@@ -72,7 +72,7 @@ class TradePayment extends \yii\db\ActiveRecord
             'body' => '支付描述',
             'meta' => '支付元数据',
             'transaction_no' => '交易流水号',
-            'payment_status' => '支付状态', //同订单表中的支付状态 2已支付, 3支付异常
+            'payment_status' => '支付状态', //支付状态，1未支付，2已支付，3支付异常
             'failure_code' => '失败编号',
             'failure_message' => '失败消息',
             'client_ip' => '客户端IP',

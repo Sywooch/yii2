@@ -15,7 +15,7 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $trade_status
  * @property integer $payment_id
  * @property integer $payment_status
- * @property integer $distribution_status
+ * @property integer $logistical_status
  * @property string $total_amount
  * @property string $paid_amount
  * @property string $balance_amount
@@ -43,6 +43,10 @@ class Trade extends \yii\db\ActiveRecord
     const TRADE_IS_DOING = 4;
     const TRADE_HAS_REFUND = 5;
     const TRADE_HAS_COMPLETE = 6;
+
+    const PAYMENT_WAIT_PAY = 1;
+    const PAYMENT_HAS_PAID = 2;
+    const PAYMENT_IS_FAILED = 3;
 
     /**
      * @inheritdoc
@@ -87,8 +91,8 @@ class Trade extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
             'trade_status' => '交易状态', //1待付款，2已付款，3已取消，4退款中，5已退款，6已完成
             'payment_id' => '支付凭证编号',
-            'payment_status' => '支付状态', //1未支付，2已支付, 3支付异常
-            'distribution_status' => '配送状态',
+            'payment_status' => '支付状态', //同支付表中的支付状态 1未支付，2已支付，3支付异常
+            'logistical_status' => '配送状态', //同物流表中的配送状态 1待发货，2已发货，3已收货，4拒收货，5货物丢失，6已退货
             'total_amount' => '商品总金额',
             'paid_amount' => '已付金额',
             'balance_amount' => '余额支付金额',
@@ -127,20 +131,16 @@ class Trade extends \yii\db\ActiveRecord
         }
     }
 
-    public function getPaymentStatusOptions($trade_status = null)
+    public function getPaymentStatusOptions($payment_status = null)
     {
         $arr = [
-            self::PAYMENT_WAIT_PAY => '待付款',
-            self::PAYMENT_HAS_PAID => '已付款',
-            self::PAYMENT_HAS_CANCEL => '已取消',
-            self::PAYMENT_IS_DOING => '处理中',
-            self::PAYMENT_HAS_REFUND => '已退款',
-            self::PAYMENT_HAS_COMPLETE => '已完成',
+            self::PAYMENT_WAIT_PAY => '已支付',
+            self::PAYMENT_HAS_PAID => '未支付'
         ];
-        if( $trade_status === null ){
+        if( $payment_status === null ){
             return $arr;
         }else{
-            return isset($arr[$trade_status]) ? $arr[$trade_status] : $trade_status;
+            return isset($arr[$payment_status]) ? $arr[$payment_status] : $payment_status;
         }
     }
 }
