@@ -18,7 +18,7 @@ class TradeLogisticalSearch extends TradeLogistical
     public function rules()
     {
         return [
-            [['id', 'order_id', 'logistical_sn', 'logistical_status', 'created_at', 'update_at'], 'integer'],
+            [['id', 'order_id', 'logistical_no', 'logistical_status', 'created_at', 'update_at'], 'integer'],
             [['trade_no', 'logistical_name'], 'safe'],
         ];
     }
@@ -61,7 +61,7 @@ class TradeLogisticalSearch extends TradeLogistical
         $query->andFilterWhere([
             'id' => $this->id,
             'order_id' => $this->order_id,
-            'logistical_sn' => $this->logistical_sn,
+            'logistical_no' => $this->logistical_no,
             'logistical_status' => $this->logistical_status,
             'created_at' => $this->created_at,
             'update_at' => $this->update_at,

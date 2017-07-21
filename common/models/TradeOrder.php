@@ -4,6 +4,7 @@ namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use backend\models\Picture;
 
 /**
  * This is the model class for table "{{%trade_order}}".
@@ -90,5 +91,15 @@ class TradeOrder extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function getPicture()
+    {
+        return $this->hasOne(Picture::className(), ['id' => 'picture_id']);
+    }
+
+    public function getLogistical()
+    {
+        return $this->hasOne(TradeLogistical::className(), ['order_id' => 'id']);
     }
 }
