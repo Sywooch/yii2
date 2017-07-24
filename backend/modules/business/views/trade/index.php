@@ -66,6 +66,7 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-paypal"></i> '.$this->title;
                     'pluginOptions'=>['allowClear'=>true],
                 ],
                 'filterInputOptions'=>['placeholder'=>'所有类别'],
+                'width'=>'5%'
             ],
             [
                 'attribute' => 'payment_status',
@@ -79,6 +80,7 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-paypal"></i> '.$this->title;
                     'pluginOptions'=>['allowClear'=>true],
                 ],
                 'filterInputOptions'=>['placeholder'=>'所有类别'],
+                'width'=>'5%'
             ],
             [
                 'attribute' => 'logistical_status',
@@ -92,34 +94,40 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-paypal"></i> '.$this->title;
                     'pluginOptions'=>['allowClear'=>true],
                 ],
                 'filterInputOptions'=>['placeholder'=>'所有类别'],
+                'width'=>'5%'
             ],
-            // 'payment_id',
-            // 'payment_satus',
-            // 'logistical_status',
-            // 'balance_amount',
-            // 'discount_amount',
-            // 'logistical_amount',
-            // 'point_amount',
-            // 'refund_amount',
-            // 'earn_point',
             [
                 'attribute'=>'total_amount',
+                'hAlign'=>'right',
                 'vAlign'=>'middle',
             ],
             [
                 'attribute'=>'paid_amount',
+                'hAlign'=>'right',
                 'vAlign'=>'middle',
+            ],
+            [
+                'attribute'=>'logistical_amount',
+                'hAlign'=>'right',
+                'vAlign'=>'middle',
+                'filter'=>false
+            ],
+            [
+                'attribute'=>'discount_amount',
+                'hAlign'=>'right',
+                'vAlign'=>'middle',
+                'filter'=>false
+            ],
+            [
+                'attribute'=>'balance_amount',
+                'hAlign'=>'right',
+                'vAlign'=>'middle',
+                'filter'=>false
             ],
             [
                 'attribute'=>'contact_phone',
                 'vAlign'=>'middle',
             ],
-            // 'contact_address',
-            // 'contact_postcode',
-            // 'user_remark:ntext',
-            // 'cancel_reason',
-            // 'paid_at',
-            // 'rated_at',
             [
                 'attribute'=>'created_at',
                 'format'=>['datetime','php:Y-m-d H:i:s'],
@@ -127,13 +135,8 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-paypal"></i> '.$this->title;
             ],
             [
                 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{view}',
-                'vAlign'=>'middle',
-            ],
-            [
-                'class'=>'kartik\grid\CheckboxColumn',
-                'headerOptions'=>['class'=>'kartik-sheet-style'],
-            ],
+                'template' => '{update}'
+            ]
         ],
     ]); ?>
 </div>

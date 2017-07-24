@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'payment_id')->textInput() ?>
 
-    <?= $form->field($model, 'payment_satus')->textInput() ?>
+    <?= $form->field($model, 'payment_status')->textInput() ?>
 
     <?= $form->field($model, 'logistical_status')->textInput() ?>
 

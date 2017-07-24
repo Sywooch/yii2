@@ -94,7 +94,7 @@ class Trade extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'trade_no' => '订单编号',
+            'trade_no' => '交易编号',
             'user_id' => '用户编号',
             'trade_status' => '交易状态', //1待付款，2已付款，3已取消，4退款中，5已退款，6已完成
             'payment_id' => '支付凭证编号',
@@ -102,7 +102,7 @@ class Trade extends \yii\db\ActiveRecord
             'logistical_status' => '配送状态', //同物流表中的配送状态 1待发货，2已发货，3已收货，4拒收货，5货物丢失，6已退货
             'total_amount' => '商品总金额',
             'paid_amount' => '已付金额',
-            'balance_amount' => '余额支付金额',
+            'balance_amount' => '余额支付',
             'discount_amount' => '优惠金额',
             'logistical_amount' => '配送费用',
             'point_amount' => '积分抵用金额',
@@ -117,7 +117,7 @@ class Trade extends \yii\db\ActiveRecord
             'paid_at' => '支付成功时间',
             'rated_at' => '评价时间',
             'created_at' => '交易创建时间',
-            'updated_at' => '订单修改时间',
+            'updated_at' => '交易修改时间',
         ];
     }
 
@@ -164,7 +164,7 @@ class Trade extends \yii\db\ActiveRecord
         if( $logistical_status === null ){
             return $arr;
         }else{
-            return isset($arr[$logistical_status]) ? $arr[$logistical_status] : $logistical_status;
+            return isset($arr[$logistical_status]) ? $arr[$logistical_status] : '无';
         }
     }
 

@@ -64,10 +64,10 @@ class TradeOrder extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => '订单编号',
             'trade_no' => '交易编号',
-            'user_id' => 'User ID',
-            'product_id' => '产品ID',
+            'user_id' => '用户编号',
+            'product_id' => '产品编号',
             'product_name' => '商品名称',
             'picture_id' => '商品主图编号',
             'picture_url' => '商品主图',

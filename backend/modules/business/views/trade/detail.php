@@ -2,17 +2,24 @@
     use yii\helpers\Html;
 ?>
 <div class="kv-detail-content" style="padding:0px 50px;overflow:hidden">
-    <h4>交易信息 <small><?=$model->trade_no;?></small></h4>
-    <?php
-    if(!empty($model->orders)){
-        foreach($model->orders as $order){
-    ?>
+    <h4>交易信息 <small>NO:<?=$model->trade_no;?></small></h4>
+
     <div class="row">
         <div class="col-sm-1">
-            <div class="img-thumbnail img-rounded text-center">
-                <?=Html::img('http://'.Yii::$app->params['domain']['image'].$order->picture->path,['width'=>'60','height'=>'60','style'=>'padding:2px;']);?>
-                <div class="small text-muted">Published: 2016-04-01</div>
-            </div>
+            <?php
+            if(!empty($model->orders)){
+                foreach($model->orders as $key => $order) {
+                    echo '<div class="img-thumbnail img-rounded text-center">';
+                    if (!empty($order->picture_url)) {
+                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture_url, ['width' => '60', 'height' => '60', 'style' => 'padding:2px;']);
+                    } else {
+                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture->path, ['width' => '60', 'height' => '60', 'style' => 'padding:2px;']);
+                    }
+                    echo $key == count($model->orders) - 1 ? '<div class="small text-muted">仅供参考</div>' : '';
+                    echo '</div>';
+                }
+            }
+            ?>
         </div>
         <div class="col-sm-6">
             <table class="table table-bordered table-condensed table-hover small kv-table">
@@ -25,21 +32,27 @@
                     <th>订单号</th>
                     <th>商品</th>
                     <th>SKU</th>
-                    <th class="text-right">单价</th>
                     <th class="text-right">数量</th>
+                    <th class="text-right">单价</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td><?=$order->id; ?></td>
-                    <td><?=$order->product_name; ?></td>
-                    <td><?=$order->sku_name; ?></td>
-                    <td class="text-right"><?=$order->price; ?></td>
-                    <td class="text-right"><?=$order->num; ?></td>
-                </tr>
+                <?php
+                if(!empty($model->orders)){
+                    foreach($model->orders as $key => $order){
+                        echo '<tr>';
+                        echo '<td>'.($key+1).'</td>';
+                        echo '<td>'.$order->id.'</td>';
+                        echo '<td>'.$order->product_name.'</td>';
+                        echo '<td>'.$order->sku_name.'</td>';
+                        echo '<td class="text-right">'.$order->num.'</td>';
+                        echo '<td class="text-right">'.$order->price.'</td>';
+                        echo '</tr>';
+                    }
+                }
+                ?>
                 <tr class="warning">
                     <th></th>
                     <th>小计</th>
-                    <th colspan="4" class="text-right">4,000.00</th>
+                    <th colspan="4" class="text-right"><?=$model->total_amount; ?></th>
                 </tr>
                 </tbody>
             </table>
@@ -54,18 +67,24 @@
                     <th>#</th>
                     <th>快递公司</th>
                     <th>快递单号</th>
-                    <th>状态</th>
+                    <th>物流状态</th>
                     <th>收货人姓名</th>
                     <th class="text-right">收货人电话</th>
                 </tr>
-                <tr>
-                    <td>1</td>
-                    <td><?=isset($order->logistical)?$order->logistical->logistical_name:'--'; ?></td>
-                    <td><?=isset($order->logistical)?$order->logistical->logistical_no:'--'; ?></td>
-                    <td><?=isset($order->logistical)?$order->logistical->logistical_status:''; ?></td>
-                    <td><?=$model->contact_name; ?></td>
-                    <td class="text-right"><?=$model->contact_phone; ?></td>
-                </tr>
+                <?php
+                if(!empty($model->orders)){
+                    foreach($model->orders as $key => $order){
+                        echo '<tr>';
+                            echo '<td>'.($key+1).'</td>';
+                            echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_name:'无').'</td>';
+                            echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_no:'无').'</td>';
+                            echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_status:'无').'</td>';
+                            echo '<td>'.$model->contact_name.'</td>';
+                            echo '<td class="text-right">'.$model->contact_phone.'</td>';
+                            echo '</tr>';
+                        }
+                    }
+                ?>
                 <tr class="warning">
                     <th></th>
                     <th>收货人地址</th>
@@ -75,8 +94,4 @@
             </table>
         </div>
     </div>
-    <?php
-        }
-    }
-    ?>
 </div>

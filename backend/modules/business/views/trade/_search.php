@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'payment_id') ?>
 
-    <?php // echo $form->field($model, 'payment_satus') ?>
+    <?php // echo $form->field($model, 'payment_status') ?>
 
     <?php // echo $form->field($model, 'logistical_status') ?>
 
