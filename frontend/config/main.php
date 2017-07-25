@@ -54,6 +54,8 @@ return [
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'session' => [
+            //'class' => 'yii\redis\Session',
+            //'redis' => 'redis',
             'name' => 'advanced-frontend',
         ],
         'log' => [

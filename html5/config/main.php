@@ -54,6 +54,8 @@ return [
             'identityCookie' => ['name' => '_identity-html5', 'httpOnly' => true],
         ],
         'session' => [
+            //'class' => 'yii\redis\Session',
+            //'redis' => 'redis',
             'name' => 'advanced-html5',
         ],
         'log' => [
