@@ -1,6 +1,6 @@
 <?php
 
-namespace common\components\jobs;
+namespace backend\components\jobs;
 
 use Yii;
 use yii\base\Object;

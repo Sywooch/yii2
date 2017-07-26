@@ -54,6 +54,11 @@ return [
             //'redis' => 'redis',
             'name' => 'advanced-backend', // this is the name of the session cookie used for login on the backend
         ],
+        'queue' => [
+            'class' => \yii\queue\redis\Queue::class,
+            'redis' => 'redis', // Redis connection component or its config
+            'channel' => 'queue', // Queue channel key
+        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

@@ -13,10 +13,5 @@ return [
             'port' => 6379,
             'database' => 0,
         ],
-        'queue' => [
-            'class' => \yii\queue\redis\Queue::class,
-            'redis' => 'redis', // Redis connection component or its config
-            'channel' => 'queue', // Queue channel key
-        ],
     ],
 ];
