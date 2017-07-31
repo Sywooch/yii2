@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 2017-07-10 02:43:20
+-- Generation Time: 2017-07-31 02:27:57
 -- 服务器版本： 10.1.9-MariaDB
 -- PHP Version: 7.0.18
 
@@ -5422,7 +5422,7 @@ CREATE TABLE `yii_trade` (
   `paid_amount` decimal(10,2) DEFAULT '0.00' COMMENT '已付金额',
   `balance_amount` decimal(10,2) DEFAULT '0.00' COMMENT '余额支付金额',
   `discount_amount` decimal(10,2) DEFAULT '0.00' COMMENT '优惠金额',
-  `distribution_amount` decimal(10,2) DEFAULT '0.00' COMMENT '配送费用',
+  `logistical_amount` decimal(10,2) DEFAULT '0.00' COMMENT '配送费用',
   `point_amount` decimal(10,2) DEFAULT '0.00' COMMENT '积分抵用金额',
   `refund_amount` decimal(10,2) DEFAULT '0.00' COMMENT '退款金额',
   `earn_point` int(11) DEFAULT '0' COMMENT '获得积分',
@@ -5438,6 +5438,14 @@ CREATE TABLE `yii_trade` (
   `updated_at` int(11) NOT NULL COMMENT '订单修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- 转存表中的数据 `yii_trade`
+--
+
+INSERT INTO `yii_trade` (`id`, `trade_no`, `user_id`, `trade_status`, `payment_id`, `payment_status`, `logistical_status`, `total_amount`, `paid_amount`, `balance_amount`, `discount_amount`, `logistical_amount`, `point_amount`, `refund_amount`, `earn_point`, `contact_name`, `contact_phone`, `contact_address`, `contact_postcode`, `user_remark`, `cancel_reason`, `paid_at`, `rated_at`, `created_at`, `updated_at`) VALUES
+(1, '100123216', 1, 1, 1, 2, 0, '5900.00', '5900.00', '0.00', '0.00', '0.00', '0.00', '0.00', 0, '熊进超', '15911006066', '河北省石家庄市翰林观天下14#3单元1804', '050051', '', 0, 0, 0, 1486540245, 1486540245),
+(2, '100123217', 1, 1, 1, 2, 0, '200.00', '180.00', '0.00', '20.00', '0.00', '0.00', '0.00', 0, '张强', '13311002524', '河北省石家庄市翰林观天下14#3单元1804', '050051', '', 0, 0, 0, 1486540245, 1486540245);
+
 -- --------------------------------------------------------
 
 --
@@ -5449,7 +5457,7 @@ CREATE TABLE `yii_trade_logistical` (
   `trade_no` varchar(50) NOT NULL COMMENT '交易单号',
   `order_id` int(11) NOT NULL COMMENT '订单号',
   `logistical_name` varchar(100) NOT NULL COMMENT '物流名称',
-  `logistical_sn` tinyint(4) NOT NULL COMMENT '物流单号',
+  `logistical_no` tinyint(4) NOT NULL COMMENT '物流单号',
   `logistical_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '配送状态 1待发货，2已发货，3已收货，4拒收货，5货物丢失，6已退货',
   `created_at` int(11) NOT NULL COMMENT '创建时间',
   `update_at` int(11) NOT NULL COMMENT '更新时间'
@@ -5466,19 +5474,28 @@ CREATE TABLE `yii_trade_order` (
   `trade_no` varchar(32) NOT NULL COMMENT '交易编号',
   `user_id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT '0' COMMENT '产品ID',
-  `product_name` varchar(255) DEFAULT NULL COMMENT '商品名称',
+  `product_name` varchar(255) NOT NULL DEFAULT '' COMMENT '商品名称',
   `picture_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品主图编号',
-  `picture_url` varchar(255) DEFAULT NULL COMMENT '商品主图',
+  `picture_url` varchar(255) NOT NULL DEFAULT '' COMMENT '商品主图',
   `sku_id` int(11) DEFAULT '0' COMMENT 'SKU',
-  `sku_name` varchar(64) DEFAULT NULL COMMENT 'SKU名称',
+  `sku_name` varchar(64) NOT NULL DEFAULT '' COMMENT 'SKU名称',
   `price` decimal(10,2) DEFAULT '0.00' COMMENT '单价',
   `num` int(11) DEFAULT '0' COMMENT '数量',
   `subtotal` decimal(10,2) DEFAULT '0.00' COMMENT '小计',
   `activity_id` int(11) DEFAULT '0' COMMENT '活动编号',
   `discount` float DEFAULT '0' COMMENT '折扣',
-  `created_at` int(11) DEFAULT NULL COMMENT '创建订单时间',
-  `updated_at` int(11) DEFAULT NULL COMMENT '订单修改时间'
+  `created_at` int(11) NOT NULL COMMENT '创建订单时间',
+  `updated_at` int(11) NOT NULL COMMENT '订单修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- 转存表中的数据 `yii_trade_order`
+--
+
+INSERT INTO `yii_trade_order` (`id`, `trade_no`, `user_id`, `product_id`, `product_name`, `picture_id`, `picture_url`, `sku_id`, `sku_name`, `price`, `num`, `subtotal`, `activity_id`, `discount`, `created_at`, `updated_at`) VALUES
+(1, '100123216', 1, 1, '魔兽点卡2500分钟', 3712, '', 1, '300分钟', '100.00', 1, '100.00', 0, 0, 1478700717, 1478700717),
+(2, '100123216', 1, 2, 'TCL王牌彩电', 3717, '', 29, '55cm*55cm', '5800.00', 1, '5800.00', 0, 0, 1478700717, 1478700717),
+(3, '100123217', 1, 1, '魔兽点卡2500分钟', 3712, '', 1, '300分钟', '100.00', 2, '200.00', 0, 0, 1478700717, 1478700717);
 
 -- --------------------------------------------------------
 
@@ -5969,7 +5986,7 @@ ALTER TABLE `yii_tag`
 -- 使用表AUTO_INCREMENT `yii_trade`
 --
 ALTER TABLE `yii_trade`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- 使用表AUTO_INCREMENT `yii_trade_logistical`
 --
@@ -5979,7 +5996,7 @@ ALTER TABLE `yii_trade_logistical`
 -- 使用表AUTO_INCREMENT `yii_trade_order`
 --
 ALTER TABLE `yii_trade_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- 使用表AUTO_INCREMENT `yii_trade_payment`
 --
