@@ -5,7 +5,7 @@ namespace backend\modules\business\controllers;
 use Yii;
 use common\models\TradeOrder;
 use common\models\TradeOrderSearch;
-use yii\web\Controller;
+use backend\controllers\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
  */
 class TradeOrderController extends Controller
 {
+    private $auth = '订单管理';
     /**
      * @inheritdoc
      */

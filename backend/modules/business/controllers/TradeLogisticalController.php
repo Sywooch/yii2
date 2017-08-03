@@ -5,7 +5,7 @@ namespace backend\modules\business\controllers;
 use Yii;
 use common\models\TradeLogistical;
 use common\models\TradeLogisticalSearch;
-use yii\web\Controller;
+use backend\controllers\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -14,6 +14,7 @@ use yii\filters\VerbFilter;
  */
 class TradeLogisticalController extends Controller
 {
+    private $auth = '物流管理';
     /**
      * @inheritdoc
      */

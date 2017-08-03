@@ -11,7 +11,7 @@ if (Yii::$app->controller->action->id === 'login') {
  * Instead, use the code  $this->layout = '//main-login'; in your controller.
  */
     echo $this->render(
-        'login',
+        'main-login',
         ['content' => $content]
     );
 } else {
@@ -36,7 +36,7 @@ if (Yii::$app->controller->action->id === 'login') {
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
-    <body class="hold-transition skin-black-light sidebar-mini" style="font-family:Microsoft YaHei">
+    <body class="hold-transition <?= \dmstr\helpers\AdminLteHelper::skinClass() ?> sidebar-mini" style="font-family:Microsoft YaHei">
     <?php $this->beginBody() ?>
     <div class="wrapper">
 

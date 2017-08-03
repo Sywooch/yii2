@@ -27,6 +27,7 @@ class Controller extends \yii\web\Controller
             'Visible' => '可见',
             'Status' => '状态',
             'View' => '查看',
+            'Detail' => '查看',
             'Delete' => '删除',
             'Assignment' => '授权',
             'Reset' => '重置权限',
@@ -137,7 +138,7 @@ class Controller extends \yii\web\Controller
             if($method->class==$controller->name&&strstr($method->name,'action')
                 &&!strstr($method->name,'Ajax')&&$method->name!='actions'){
                 $permission = $auth->getPermission($name.'/'.str_replace('action','',$method->name));
-                $description = isset($this->auth[str_replace('action','',$method->name)])?trim($role->description,'管理').'-'.$this->auth[str_replace('action','',$method->name)]:$name.'/'.str_replace('action','',$method->name);
+                $description = isset($this->auth[str_replace('action','',$method->name)])?str_replace('管理','',$role->description).'-'.$this->auth[str_replace('action','',$method->name)]:$name.'/'.str_replace('action','',$method->name);
                 if($permission === null){
                     //创建权限
                     $permission = $auth->createPermission($name.'/'.str_replace('action','',$method->name));
