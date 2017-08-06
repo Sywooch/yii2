@@ -59,6 +59,25 @@ return [
             'redis' => 'redis', // Redis connection component or its config
             'channel' => 'queue', // Queue channel key
         ],
+        'assetManager' => [
+            'bundles' => [
+                'dmstr\web\AdminLteAsset' => [
+                    'skin' => 'skin-black-light',
+                    //"skin-blue",
+                    //"skin-black",
+                    //"skin-red",
+                    //"skin-yellow",
+                    //"skin-purple",
+                    //"skin-green",
+                    //"skin-blue-light",
+                    //"skin-black-light",
+                    //"skin-red-light",
+                    //"skin-yellow-light",
+                    //"skin-purple-light",
+                    //"skin-green-light"
+                ],
+            ],
+        ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
