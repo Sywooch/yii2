@@ -145,7 +145,6 @@ class Controller extends \yii\web\Controller
                     $permission->description = $description;
                     $permission->data = 'system';
                     $auth->add($permission);
-
                     $auth->addChild($superAdmin, $permission);
                     $auth->addChild($role, $permission);
                 }else{
