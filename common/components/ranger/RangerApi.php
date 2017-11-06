@@ -19,7 +19,6 @@ class RangerApi
         $params['format'] = ArrayHelper::getValue($params, 'format', 'json');
         
         $params['sign'] = self::generateSign($params);
-        $format = $params['format'];
         $params = http_build_query($params);
         $url = Yii::$app->params['domain']['api'];
 
@@ -31,16 +30,8 @@ class RangerApi
         curl_setopt ( $ch, CURLOPT_POSTFIELDS, $params );
         $data = curl_exec($ch);
         curl_close($ch);
-        if($format == 'array') {
-            try {
-                $result = yii\helpers\Json::decode($data);
-            } catch (\Exception $e) {
-                $result = $data;
-            }
-        }else{
-            $result = $data;
-        }
-        return $result;
+
+        return $data;
     }
     
     public static function generateSign($params)

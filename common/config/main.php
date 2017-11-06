@@ -8,7 +8,7 @@ return [
             'serializer' => false //The functions used to serialize and unserialize cached data.
         ],
         'redis' => [
-            'class' => \yii\redis\Connection::class,
+            'class' => 'yii\redis\Connection',
             'hostname' => 'localhost',
             'port' => 6379,
             'database' => 0,

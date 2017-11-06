@@ -17,11 +17,10 @@ class RangerController extends Controller
     public function actionApi()
     {
         $method = Yii::$app->request->post('method');
-        $query = Yii::$app->request->post('query') != null? Yii::$app->request->post('query'):[];
-        $params = Yii::$app->request->post('params') != null? Yii::$app->request->post('params'):[];
-        $params['format'] = 'json';
-        print_r(RangerTrait::api($method, $query, $params));
-        Yii::$app->end();
+        $query = Yii::$app->request->post('query',[]);
+        $params = Yii::$app->request->post('params',[]);
+        $params['format'] = Yii::$app->request->post('format','json');
+        return RangerTrait::api($method, $query, $params);
     }
 
     /**

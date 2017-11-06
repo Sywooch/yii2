@@ -34,19 +34,33 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-user-secret"></i> '.$this->tit
             [
                 'attribute'=>'id',
                 'headerOptions'=>['style'=>'width:80px'],
+                'vAlign'=>'middle',
             ],
-            'username',
-            'auth_key',
-            //'password_hash',
-            //'password_reset_token',
-            'email:email',
+            [
+                'attribute'=>'username',
+                'vAlign'=>'middle',
+            ],
+            [
+                'attribute'=>'auth_key',
+                'vAlign'=>'middle',
+            ],
+            [
+                'attribute'=>'email',
+                'vAlign'=>'middle',
+                'value' => function($model){
+                    return \Yii::$app->formatter->asEmail($model->email);
+                },
+                'format'=>'raw',
+            ],
             [
                 'attribute'=>'created_at',
                 'format'=>['datetime','php:Y-m-d H:i:s'],
+                'vAlign'=>'middle',
             ],
             [
                 'attribute'=>'updated_at',
                 'format'=>['datetime','php:Y-m-d H:i:s'],
+                'vAlign'=>'middle',
             ],
             [
                 'attribute'=>'status',
@@ -62,13 +76,15 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-user-secret"></i> '.$this->tit
                 ],
                 'filterInputOptions'=>['placeholder'=>'所有类别'],
                 'headerOptions'=>['width'=>'80px'],
+                'vAlign'=>'middle',
             ],
             ['class' => '\kartik\grid\ActionColumn'],
             [
                 'format'=>'raw',
                 'value'=>function($model){
                     return Html::a('<span class="glyphicon glyphicon-cog"></span>', ['assignment','id'=>$model->id], ['title' => '权限分配']) ;
-                }
+                },
+                'vAlign'=>'middle',
             ],
         ],
     ]); ?>

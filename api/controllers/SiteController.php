@@ -90,7 +90,8 @@ class SiteController extends RangerController
         $this->end = explode(' ',microtime());
         $time = $this->end[0]+$this->end[1]-($this->start[0]+$this->start[1]);
         $result['used'] = round($time, 3)."s";
-        echo Json::encode($result);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return $result;
     }
 
 }

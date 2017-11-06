@@ -9,7 +9,7 @@ use kartik\grid\GridView;
 $this->title = '客户管理';
 $this->params['breadcrumbs'][] = '<i class="fa fa-user"></i> '.$this->title;
 ?>
-<div class="admin-index">
+<div class="user-index">
 
     <p>
         <?= Html::a('<i class="fa fa-plus-circle"></i> 创建客户', ['create'], ['class' => 'btn btn-success']) ?>
@@ -57,6 +57,10 @@ $this->params['breadcrumbs'][] = '<i class="fa fa-user"></i> '.$this->title;
             [
                 'attribute'=>'email',
                 'vAlign'=>'middle',
+                'value' => function($model){
+                    return \Yii::$app->formatter->asEmail($model->email);
+                },
+                'format'=>'raw',
             ],
             [
                 'attribute'=>'created_at',
