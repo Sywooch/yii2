@@ -28,7 +28,7 @@
 
         <?= dmstr\widgets\Menu::widget(
             [
-                'options' => ['class' => 'sidebar-menu'],
+                'options' => ['class' => 'sidebar-menu tree','data-widget'=>'tree'],
                 'items' => [
                     ['label' => '内容', 'options' => ['class' => 'header']],
                     [
