@@ -278,9 +278,9 @@ $this->params['breadcrumbs'][] = '更新';
                     $.post('<?= \yii\helpers\Url::to(['/content/article-section/delete']);?>', { id:section_id });
                 }
                 $(this).parents('.article_section').remove();
-                $('.article_section').each(function( inex, item ){
+                $('.article_section').each(function( index, item ){
                     $(item).find('input,textarea,select').each(function(){
-                        var name = $(this).attr('name').replace(/ArticleSection\[\d+\]/gi, 'ArticleSection['+inex+']');
+                        var name = $(this).attr('name').replace(/ArticleSection\[\d+\]/gi, 'ArticleSection['+index+']');
                         $(this).attr('name',name);
                     });
                 });
