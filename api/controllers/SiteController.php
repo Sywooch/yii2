@@ -48,7 +48,7 @@ class SiteController extends RangerController
         } catch (yii\web\HttpException $e) {
             $result = [
                 'status' => 'error',
-                'code' => $e->getCode(),
+                'code' => $e->statusCode,
                 'data' => $e->getMessage(),
                 'cache' => $params['cache'],
             ];

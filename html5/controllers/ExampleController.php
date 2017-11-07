@@ -15,7 +15,7 @@ class ExampleController extends Controller
     {
         print_r(RangerTrait::api('ranger.user.login',[
             'username'=>'STARR',
-            //'password'=>'123456',
+            'password'=>'123456',
         ]));
     }
 
@@ -29,7 +29,7 @@ class ExampleController extends Controller
                     //['id'=>12],
                     ['<>','id',10]
                 ],
-                'access_token' => 'gv3JLDa54hCsLqqk6gwRkwVFIcJl9vpd',
+                //'access_token' => 'gv3JLDa54hCsLqqk6gwRkwVFIcJl9vpd',
             ],
             [
                 'format' => 'json',
@@ -38,6 +38,13 @@ class ExampleController extends Controller
                 'cache_time' => 120,
             ]
         ));
+    }
+
+    public function actionUserDetail()
+    {
+        print_r(RangerTrait::api('ranger.user.detail',[
+            'access_token' => '6A4uMU0rxtj0V0rFmKQrmQX6ITEhs0Vk'
+        ]));
     }
 
     public function actionUserCreate()

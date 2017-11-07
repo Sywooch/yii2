@@ -10,7 +10,16 @@ use api\components\RangerException;
 
 class UserController extends RangerController implements RangerInterface
 {
-    
+    public $user;
+    public function init()
+    {
+        $params = yii::$app->request->post('params');
+        if(yii::$app->request->post('method') != 'ranger.user.login'){
+            $this->user = parent::checkAccessToken(['query'=>$params]);
+        }
+        parent::init();
+    }
+
     public function actionLogin(array $params)
     {
         $username = '';
@@ -51,7 +60,6 @@ class UserController extends RangerController implements RangerInterface
 
     public function actionList(array $params)
     {
-        parent::checkAccessToken($params);
         $query = parent::generationQuery(\common\models\User::class,$params);
         try {
             $models = $query->orderBy(['id' => SORT_DESC])->all();
@@ -74,12 +82,12 @@ class UserController extends RangerController implements RangerInterface
 
     public function actionDetail(array $params)
     {
-        $result = parent::checkAccessToken($params);
+        $result = $this->user;
         if(!empty($result)) {
             unset($result['auth_key'], $result['password_hash'], $result['password_reset_token']);
             $result['created_at'] = date('Y-m-d H:i:s', $result['created_at']);
             $result['updated_at'] = date('Y-m-d H:i:s', $result['updated_at']);
-            $result['avatar'] = $result['picture_id'] > 0 ? User::findOne($result['picture_id'])->picture->path : '';
+            $result['avatar'] = $result['picture_id'] > 0 ? User::findOne($result['id'])->picture->path : '';
         }
         return $result;
     }
@@ -97,7 +105,7 @@ class UserController extends RangerController implements RangerInterface
         $model->password_hash = Yii::$app->security->generatePasswordHash($password);
         $model->auth_key = Yii::$app->security->generateRandomString();
         if(!$model->validate() ){
-            RangerException::throwException(RangerException::APP_ERROR_PARAMS,json_encode($model->getErrors()));
+            RangerException::throwException(RangerException::APP_ERROR_PARAMS,json_encode($model->getFirstError()));
         }
         try{
             $model->save();
@@ -114,7 +122,7 @@ class UserController extends RangerController implements RangerInterface
 
     public function actionUpdate(array $params)
     {
-        $user = parent::checkAccessToken($params);
+        $user = $this->user;
         $model = User::findOne($user['id']);
         if(!$model->load($params,'query')){
             RangerException::throwException(RangerException::APP_ERROR_PARAMS);
