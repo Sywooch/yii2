@@ -15,7 +15,7 @@ class ExampleController extends Controller
     {
         print_r(RangerTrait::api('ranger.user.login',[
             'username'=>'STARR',
-            'password'=>'123456',
+            //'password'=>'123456',
         ]));
     }
 
@@ -29,7 +29,7 @@ class ExampleController extends Controller
                     //['id'=>12],
                     ['<>','id',10]
                 ],
-                'access_token' => '0mcZIy285iWeFXiJV9ArhrMQinlMcCwZ',
+                'access_token' => 'gv3JLDa54hCsLqqk6gwRkwVFIcJl9vpd',
             ],
             [
                 'format' => 'json',

@@ -19,7 +19,6 @@ class RangerController extends Controller
         $method = Yii::$app->request->post('method');
         $query = Yii::$app->request->post('query',[]);
         $params = Yii::$app->request->post('params',[]);
-        $params['format'] = Yii::$app->request->post('format','json');
         return RangerTrait::api($method, $query, $params);
     }
 

@@ -37,7 +37,7 @@ class UserController extends RangerController implements RangerInterface
             RangerException::throwException(RangerException::APP_ERROR_PASSWORD);
         }
         $accessToken = Yii::$app->security->generateRandomString();
-        $duration = 3600*24*30;
+        $duration = 3600*24*14;
         Yii::$app->cache->set($accessToken, $user->id, $duration);
         Yii::$app->user->login($user, $duration);
         $result = $user->attributes;
@@ -51,6 +51,7 @@ class UserController extends RangerController implements RangerInterface
 
     public function actionList(array $params)
     {
+        parent::checkAccessToken($params);
         $query = parent::generationQuery(\common\models\User::class,$params);
         try {
             $models = $query->orderBy(['id' => SORT_DESC])->all();

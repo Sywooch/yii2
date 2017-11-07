@@ -36,7 +36,7 @@ class RangerController extends Controller
             RangerException::throwException(RangerException::APP_ERROR_ACCESS_TOKEN,'',401);
         }
         $user = User::findOne($userId);
-        $duration = 3600*24*30;
+        $duration = 3600*24*14;
         Yii::$app->cache->set($accessToken, $userId, $duration);
 
         return $user->attributes;
@@ -61,15 +61,12 @@ class RangerController extends Controller
         if($params['cache'] == true ) {
             if(Yii::$app->cache->exists($key)) {
                 $result['data'] = json_decode(Yii::$app->cache->get($key),true);
-                $result['cache'] = $params['cache'];
             }else{
                 $result['data'] = Yii::$app->runAction('/v' . $version . '/' . $method[1] . '/' . $method[2], ['params' => $params]);
                 Yii::$app->cache->set($key, json_encode($result['data']), $params['cache_time']);
-                $result['cache'] = Yii::$app->params['cache'];
             }
         } else {
             $result['data'] = Yii::$app->runAction('/v' . $version . '/' . $method[1] . '/' . $method[2], ['params' => $params]);
-            $result['cache'] = Yii::$app->params['cache'];
         }
         return $result;
     }

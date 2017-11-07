@@ -4,6 +4,7 @@ namespace api\controllers;
 use yii;
 use yii\helpers\Json;
 use api\components\RangerException;
+use yii\helpers\ArrayHelper;
 
 /**
  * Site controller
@@ -42,13 +43,14 @@ class SiteController extends RangerController
                 'status' => 'success',
                 'code' => '0',
                 'data' => $data['data'],
-                'cache' => $data['cache'],
+                'cache' => $params['cache'],
             ];
-        } catch (RangerException $e) {
+        } catch (yii\web\HttpException $e) {
             $result = [
                 'status' => 'error',
                 'code' => $e->getCode(),
-                'data' => $e->getMessage()
+                'data' => $e->getMessage(),
+                'cache' => $params['cache'],
             ];
         }
         return $result;
@@ -90,7 +92,9 @@ class SiteController extends RangerController
         $this->end = explode(' ',microtime());
         $time = $this->end[0]+$this->end[1]-($this->start[0]+$this->start[1]);
         $result['used'] = round($time, 3)."s";
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $params = Yii::$app->request->post();
+        $format = ArrayHelper::getValue($params, 'format', 'json');
+        \Yii::$app->response->format = $format;
         return $result;
     }
 
