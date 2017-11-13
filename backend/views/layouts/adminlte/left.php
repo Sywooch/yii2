@@ -95,7 +95,7 @@
                         ],
                     ],
 
-                    ['label' => '退出登录', 'url' => ['site/logout'], 'icon'=>'power-off text-red', 'visible' => Yii::$app->user->id>0, 'linkOptions' => ['data-method' => 'post']],
+                    ['label' => '退出登录', 'url' => ['/site/logout'], 'icon'=>'power-off text-red', 'visible' => Yii::$app->user->id>0, 'options' => ['class' => 'logout']],
                 ],
             ]
         ) ?>

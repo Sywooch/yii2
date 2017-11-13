@@ -3,6 +3,7 @@ namespace backend\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use backend\models\LoginForm;
 
 /**
@@ -30,14 +31,12 @@ class SiteController extends Controller
                     ],
                 ],
             ],
-            /*post only
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
                 ],
             ],
-            */
         ];
     }
 

@@ -28,4 +28,7 @@ $(function(){
 	setTimeout(function(){
 		$(".callout.alert").fadeOut()
 	},2000);
+
+	//左侧退出登陆
+	$(".logout a").attr('data-method','post');
 });
