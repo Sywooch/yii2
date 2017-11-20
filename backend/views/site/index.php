@@ -10,7 +10,7 @@ $this->title = 'My Application';
     <div class="body-content">
         <!--code-->
         <div class="row">
-            <div class="col-lg-6 col-xs-6">
+            <div class="col-lg-6 col-xs-12">
 
                 <div class="jumbotron">
                     <h1>Congratulations!</h1>
