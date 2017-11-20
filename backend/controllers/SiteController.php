@@ -54,8 +54,6 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        print_r(Yii::getAlias('@api'));
-        print_r(Yii::getAlias('@uploads'));exit;
         $controller = Yii::$app->request->get('controller');
         $keyword = Yii::$app->request->get('keyword');
         if($controller) {
