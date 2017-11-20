@@ -77,11 +77,13 @@ class RangerController extends Controller
         $params['method'] = $method;
         $params['params'] = $query;
 
-        $params['key'] = Yii::$app->params['ranger.key'];
-        $params['secret'] = Yii::$app->params['ranger.secret'];
         $params['device'] = 'system';
         $params['device_id'] = '';
         $params['origin'] = 'api';
+
+        $system = Yii::$app->params['system'];
+        $params['key'] = $system[$params['origin']][$params['device']]['key'];
+        $params['secret'] = $system[$params['origin']][$params['device']]['secret'];
 
         return RangerApi::request($params, $type);
     }
