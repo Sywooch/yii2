@@ -7,6 +7,7 @@ use common\models\User;
 use common\components\ranger\RangerApi;
 use yii\helpers\Inflector;
 use api\components\RangerException;
+use yii\helpers\ArrayHelper;
 
 /**
  * Ranger controller
