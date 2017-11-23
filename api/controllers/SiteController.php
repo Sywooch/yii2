@@ -2,6 +2,7 @@
 namespace api\controllers;
 
 use yii;
+use yii\filters\Cors;
 use api\components\RangerException;
 use yii\base\UserException;
 use yii\helpers\ArrayHelper;
@@ -18,6 +19,19 @@ class SiteController extends RangerController
      */
     public $start;
     public $end;
+
+    public function behaviors()
+    {
+        return ArrayHelper::merge([
+            [
+                'class' => Cors::className(),
+                'cors' => [
+                    'Origin' => ['http://m.yii2.com','http://www.yii2.com'],
+                    'Access-Control-Allow-Credentials'=> true,
+                ],
+            ],
+        ], parent::behaviors());
+    }
 
     public function actionIndex()
     {
