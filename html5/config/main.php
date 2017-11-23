@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'html5\controllers',
+    'defaultRoute' => 'home',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-html5',
@@ -54,8 +55,8 @@ return [
             'identityCookie' => ['name' => '_identity-html5', 'httpOnly' => true],
         ],
         'session' => [
-            'class' => 'yii\redis\Session',
-            'redis' => 'redis',
+//            'class' => 'yii\redis\Session',
+//            'redis' => 'redis',
             'name' => 'advanced-html5',
         ],
         'log' => [

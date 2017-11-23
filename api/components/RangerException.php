@@ -2,7 +2,6 @@
 
 namespace api\components;
 
-use yii;
 use yii\web\HttpException;
 
 /**
@@ -63,6 +62,6 @@ class RangerException extends HttpException
         }else{
             $message = '(#'.$code.')'.self::getExceptionMessage($code);
         }
-        throw new HttpException($http_status, $message, $code);
+        throw new RangerException($http_status, $message, $code);
     }
 }

@@ -2,7 +2,6 @@
 namespace api\controllers;
 
 use yii;
-use yii\helpers\Json;
 use api\components\RangerException;
 use yii\helpers\ArrayHelper;
 
@@ -45,7 +44,7 @@ class SiteController extends RangerController
                 'data' => $data['data'],
                 'cache' => $params['cache'],
             ];
-        } catch (yii\web\HttpException $e) {
+        } catch (RangerException $e) {
             $result = [
                 'status' => 'error',
                 'code' => $e->statusCode,
@@ -68,7 +67,6 @@ class SiteController extends RangerController
         $params = Yii::$app->request->post();
         $sign = $params['sign'];
         unset($params['sign']);
-
         if(isset(Yii::$app->params['device'][$params['device']][$params['origin']]) && Yii::$app->params['device'][$params['device']][$params['origin']]['key'] == $params['key']){
             $query['secret'] = Yii::$app->params['device'][$params['device']][$params['origin']]['secret'];
         }else{

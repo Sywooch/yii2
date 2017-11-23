@@ -13,7 +13,7 @@ trait RangerTrait
 
         $params['key'] = Yii::$app->params['ranger.key'];
         $params['secret'] = Yii::$app->params['ranger.secret'];
-        $params['device'] = 'computer';
+        $params['device'] = 'mobile';
         $params['device_id'] = '';
         $params['origin'] = 'html5';
 
