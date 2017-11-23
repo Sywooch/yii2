@@ -16,6 +16,19 @@ class RangerController extends Controller
 
     public $enableCsrfValidation = false;
 
+    public function behaviors()
+    {
+        return ArrayHelper::merge([
+            [
+                'class' => Cors::className(),
+                'cors' => [
+                    'Origin' => ['http://m.yii2.com','http://www.yii2.com'],
+                    'Access-Control-Allow-Credentials'=> true,
+                ],
+            ],
+        ], parent::behaviors());
+    }
+
     public function actions()
     {
         return [
