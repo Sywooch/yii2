@@ -2,7 +2,6 @@
 namespace api\controllers;
 
 use yii;
-use yii\filters\Cors;
 use api\components\RangerException;
 use yii\base\UserException;
 use yii\helpers\ArrayHelper;

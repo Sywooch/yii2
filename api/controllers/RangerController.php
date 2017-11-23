@@ -2,6 +2,7 @@
 namespace api\controllers;
 
 use Yii;
+use yii\filters\Cors;
 use yii\web\Controller;
 use common\models\User;
 use common\components\ranger\RangerApi;
