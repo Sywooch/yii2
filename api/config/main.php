@@ -12,6 +12,9 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'api\controllers',
     'modules' => [
+        'common' => [
+            'class' => 'api\modules\common\Module',
+        ],
         'v1' => [
             'class' => 'api\modules\v1\Module',
         ],

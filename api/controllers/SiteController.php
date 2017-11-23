@@ -3,6 +3,7 @@ namespace api\controllers;
 
 use yii;
 use api\components\RangerException;
+use yii\base\UserException;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -46,8 +47,15 @@ class SiteController extends RangerController
             ];
         } catch (RangerException $e) {
             $result = [
-                'status' => 'error',
+                'status' => 'failed',
                 'code' => $e->statusCode,
+                'data' => $e->getMessage(),
+                'cache' => $params['cache'],
+            ];
+        } catch (UserException $e) {
+            $result = [
+                'status' => 'failed',
+                'code' => $e->getCode()>0?$e->getCode():400,
                 'data' => $e->getMessage(),
                 'cache' => $params['cache'],
             ];
