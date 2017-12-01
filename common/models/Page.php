@@ -108,7 +108,7 @@ class Page extends \yii\db\ActiveRecord
 
     public function getLastBrother()
     {
-        return Page::find()->where(['parent'=>$this->parent])->orderBy('`rgt` DESC')->one();
+        return Page::find()->where(['parent'=>$this->parent,'depth'=>$this->depth])->orderBy('`rgt` DESC')->one();
     }
 
     public function getPageOptions()

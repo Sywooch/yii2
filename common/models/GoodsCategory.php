@@ -98,7 +98,7 @@ class GoodsCategory extends \yii\db\ActiveRecord
 
     public function getLastBrother()
     {
-        return GoodsCategory::find()->where(['parent'=>$this->parent])->orderBy('`rgt` DESC')->one();
+        return GoodsCategory::find()->where(['parent'=>$this->parent,'depth'=>$this->depth])->orderBy('`rgt` DESC')->one();
     }
 
     public static function getGoodsCategoryOptions()
