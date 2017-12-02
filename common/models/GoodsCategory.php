@@ -82,8 +82,8 @@ class GoodsCategory extends \yii\db\ActiveRecord
     {
         $space = '';
         $lastBrother = $this->getLastBrother();
-        $space.= str_repeat('┃ ',$this->depth-1);
-        $space.=$this->id == $lastBrother->id?'┗ ':'┣ ';
+        $space.= str_repeat('┃ ',$this->depth-1);
+        $space.=$this->id == $lastBrother->id?'┗ ':'┣ ';
         return $space;
     }
 

@@ -15,135 +15,138 @@ $this->params['breadcrumbs'][] = ['label' => $article->title, 'url' => ['article
 $this->params['breadcrumbs'][] = '更新';
 
 ?>
-
 <div class="article-section-edit">
-    <div class="nav-tabs-custom">
-        <ul class="nav nav-tabs pull-right">
-            <li>
-                <?=Html::a('文章评论',['comment/index', 'CommentSearch[model_name]' => 'article','CommentSearch[model_id]' => $article->id])?>
-            </li>
-            <li class="active">
-                <?=Html::a('文章段落',['article-section/edit', 'id' => $article->id])?>
-            </li>
-            <li>
-                <?=Html::a('基本信息',['article/update', 'id' => $article->id])?>
-            </li>
-            <li class="pull-left header">
-                <?php echo $article->title; ?>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active">
+    <div class="row">
+        <div class="col-lg-6 col-xs-12">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs pull-right">
+                    <li>
+                        <?=Html::a('文章评论',['comment/index', 'CommentSearch[model_name]' => 'article','CommentSearch[model_id]' => $article->id])?>
+                    </li>
+                    <li class="active">
+                        <?=Html::a('文章段落',['article-section/edit', 'id' => $article->id])?>
+                    </li>
+                    <li>
+                        <?=Html::a('基本信息',['article/update', 'id' => $article->id])?>
+                    </li>
+                    <li class="pull-left header">
+                        <?php echo $article->title; ?>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active">
 
-                <div class="article-section-form">
-                    <?php $form = ActiveForm::begin(); ?>
-                    <div class="section_group">
-                    <?php if($dataProvider->models != null){?>
-                        <?php foreach($dataProvider->models as $key=>$model){?>
-                            <div class="article_section">
+                        <div class="article-section-form">
+                            <?php $form = ActiveForm::begin(); ?>
+                            <div class="section_group">
+                            <?php if($dataProvider->models != null){?>
+                                <?php foreach($dataProvider->models as $key=>$model){?>
+                                    <div class="article_section">
 
-                                <div class="form-group field-section-title">
-                                    <label for="section_title" class="control-label">段落标题</label>
-                                    <input type="text" maxlength="200" value="<?=$model->section_title;?>" name="ArticleSection[<?=$key;?>][section_title]" class="form-control section_title">
-                                    <input type="hidden" maxlength="200" value="<?=$model->id;?>" name="ArticleSection[<?=$key;?>][id]" class="form-control section_id">
-                                    <div class="help-block"></div>
-                                </div>
-
-                                <div class="form-group required field-section-content">
-                                    <label for="section_content" class="control-label">段落内容</label>
-                                    <textarea class="form-control section_content" rows="6" name="ArticleSection[<?=$key;?>][section_content]"><?=$model->section_content;?></textarea>
-                                    <div class="help-block"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="section_content" class="control-label"></label>
-                                    <div class="uploader">
-                                        <label class="control-label">
-                                            <?= Html::button('<i class="fa fa-image"></i> 选择图片', ['class' => 'btn btn-info file-picker']) ?>
-                                        </label>
-                                        <div class="uploader-list">
-                                            <?php
-                                            $pictures = ArticleSectionPicture::find()->where(['section_id'=>$model->id])->orderBy(['sort'=>SORT_DESC])->all();
-                                            if($pictures!=null){
-                                                foreach($pictures as $k=>$picture){
-                                                    echo'<div class="file-item thumbnail upload-state-done">';
-                                                    echo'<div class="img-thumb"><img src="http://'.Yii::$app->params['domain']['image'].$picture->picture->path.'"></div>';
-                                                    echo'<div class="info"><span class="cancel"></span></div>';
-                                                    echo'<input type="hidden" class="section_picture_id" value="'.$picture->id.'" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][id]">';
-                                                    echo'<input type="text" class="picture_title form-control" value="'.$picture->picture_title.'" placeholder="标题" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][picture_title]">';
-                                                    echo'<input type="hidden" class="picture_id" value="'.$picture->picture_id.'" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][picture_id]">';
-                                                    echo'<input type="hidden" class="sort" value="'.$picture->sort.'" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][sort]">';
-                                                    echo'</div>';
-                                                }
-                                            }
-                                            ?>
+                                        <div class="form-group field-section-title">
+                                            <label for="section_title" class="control-label">段落标题</label>
+                                            <input type="text" maxlength="200" value="<?=$model->section_title;?>" name="ArticleSection[<?=$key;?>][section_title]" class="form-control section_title">
+                                            <input type="hidden" maxlength="200" value="<?=$model->id;?>" name="ArticleSection[<?=$key;?>][id]" class="form-control section_id">
+                                            <div class="help-block"></div>
                                         </div>
+
+                                        <div class="form-group required field-section-content">
+                                            <label for="section_content" class="control-label">段落内容</label>
+                                            <textarea class="form-control section_content" rows="6" name="ArticleSection[<?=$key;?>][section_content]"><?=$model->section_content;?></textarea>
+                                            <div class="help-block"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="section_content" class="control-label"></label>
+                                            <div class="uploader">
+                                                <label class="control-label">
+                                                    <?= Html::button('<i class="fa fa-image"></i> 选择图片', ['class' => 'btn btn-info file-picker']) ?>
+                                                </label>
+                                                <div class="uploader-list">
+                                                    <?php
+                                                    $pictures = ArticleSectionPicture::find()->where(['section_id'=>$model->id])->orderBy(['sort'=>SORT_DESC])->all();
+                                                    if($pictures!=null){
+                                                        foreach($pictures as $k=>$picture){
+                                                            echo'<div class="file-item thumbnail upload-state-done">';
+                                                            echo'<div class="img-thumb"><img src="http://'.Yii::$app->params['domain']['image'].$picture->picture->path.'"></div>';
+                                                            echo'<div class="info"><span class="cancel"></span></div>';
+                                                            echo'<input type="hidden" class="section_picture_id" value="'.$picture->id.'" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][id]">';
+                                                            echo'<input type="text" class="picture_title form-control" value="'.$picture->picture_title.'" placeholder="标题" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][picture_title]">';
+                                                            echo'<input type="hidden" class="picture_id" value="'.$picture->picture_id.'" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][picture_id]">';
+                                                            echo'<input type="hidden" class="sort" value="'.$picture->sort.'" name="ArticleSection['.$key.'][ArticleSectionPicture]['.$k.'][sort]">';
+                                                            echo'</div>';
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                            <div class="help-block"></div>
+                                        </div>
+
+
+                                        <div class="form-group text-right">
+                                            <label for="section_content" class="control-label"></label>
+                                            <?= Html::button('<i class="fa fa-plus-circle"></i> 添加一段', ['class' => 'btn btn-success add_section']) ?>
+                                            <?= Html::button('<i class="fa fa-trash"></i> 删除该段', ['class' => 'btn btn-default delete_section']) ?>
+                                            <div class="help-block"></div>
+                                        </div>
+
                                     </div>
-                                    <div class="help-block"></div>
+                                <?php }?>
+                            <?php }else{?>
+                                <?php $model = new ArticleSection;?>
+                                <div class="article_section">
+
+                                    <div class="form-group field-section-title">
+                                        <label for="section_title" class="control-label">段落标题</label>
+                                        <input type="text" maxlength="200" value="" name="ArticleSection[0][section_title]" class="form-control section_title">
+                                        <input type="hidden" maxlength="200" value="<?=$model->id;?>" name="ArticleSection[0][id]" class="form-control section_id">
+                                        <div class="help-block"></div>
+                                    </div>
+
+                                    <div class="form-group required field-section-content">
+                                        <label for="section_content" class="control-label">段落内容</label>
+                                        <textarea class="form-control section_content" rows="6" name="ArticleSection[0][section_content]"></textarea>
+                                        <div class="help-block"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="section_content" class="control-label"></label>
+                                        <div class="uploader">
+                                            <label class="control-label">
+                                                <?= Html::button('<i class="fa fa-image"></i> 选择图片', ['class' => 'btn btn-info file-picker']) ?>
+                                            </label>
+                                            <div class="uploader-list"></div>
+                                        </div>
+                                        <div class="help-block"></div>
+                                    </div>
+
+                                    <div class="form-group text-right">
+                                        <label for="section_content" class="control-label"></label>
+                                        <?= Html::button('<i class="fa fa-plus-circle"></i> 添加一段', ['class' => 'btn btn-success add_section']) ?>
+                                        <?= Html::button('<i class="fa fa-trash"></i> 删除该段', ['class' => 'btn btn-default delete_section']) ?>
+                                        <div class="help-block"></div>
+                                    </div>
+
                                 </div>
 
-
-                                <div class="form-group text-right">
-                                    <label for="section_content" class="control-label"></label>
-                                    <?= Html::button('<i class="fa fa-plus-circle"></i> 添加一段', ['class' => 'btn btn-success add_section']) ?>
-                                    <?= Html::button('<i class="fa fa-trash"></i> 删除该段', ['class' => 'btn btn-default delete_section']) ?>
-                                    <div class="help-block"></div>
-                                </div>
-
-                            </div>
-                        <?php }?>
-                    <?php }else{?>
-                        <?php $model = new ArticleSection;?>
-                        <div class="article_section">
-
-                            <div class="form-group field-section-title">
-                                <label for="section_title" class="control-label">段落标题</label>
-                                <input type="text" maxlength="200" value="" name="ArticleSection[0][section_title]" class="form-control section_title">
-                                <input type="hidden" maxlength="200" value="<?=$model->id;?>" name="ArticleSection[0][id]" class="form-control section_id">
-                                <div class="help-block"></div>
+                            <?php }?>
                             </div>
 
-                            <div class="form-group required field-section-content">
-                                <label for="section_content" class="control-label">段落内容</label>
-                                <textarea class="form-control section_content" rows="6" name="ArticleSection[0][section_content]"></textarea>
-                                <div class="help-block"></div>
+                            <div class="uploader" style="display:none">
+                                <label class="control-label"><div id="file-picker"><i class="fa fa-image"></i> 选择图片</div></label>
                             </div>
 
                             <div class="form-group">
                                 <label for="section_content" class="control-label"></label>
-                                <div class="uploader">
-                                    <label class="control-label">
-                                        <?= Html::button('<i class="fa fa-image"></i> 选择图片', ['class' => 'btn btn-info file-picker']) ?>
-                                    </label>
-                                    <div class="uploader-list"></div>
-                                </div>
+                                <?= Html::submitButton('<i class="fa fa-save"></i> 更新', ['class' => 'btn btn-primary']) ?>
+                                <?= Html::a('<i class="fa fa-undo"></i> 返回', ['article/update','id'=>$_GET['id']], ['class' => 'btn btn-default']) ?>
                                 <div class="help-block"></div>
                             </div>
 
-                            <div class="form-group text-right">
-                                <label for="section_content" class="control-label"></label>
-                                <?= Html::button('<i class="fa fa-plus-circle"></i> 添加一段', ['class' => 'btn btn-success add_section']) ?>
-                                <?= Html::button('<i class="fa fa-trash"></i> 删除该段', ['class' => 'btn btn-default delete_section']) ?>
-                                <div class="help-block"></div>
-                            </div>
+                            <?php ActiveForm::end(); ?>
 
                         </div>
-
-                    <?php }?>
                     </div>
-
-                    <div class="uploader" style="display:none">
-                        <label class="control-label"><div id="file-picker"><i class="fa fa-image"></i> 选择图片</div></label>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="section_content" class="control-label"></label>
-                        <?= Html::submitButton('<i class="fa fa-save"></i> 更新', ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('<i class="fa fa-undo"></i> 返回', ['article/update','id'=>$_GET['id']], ['class' => 'btn btn-default']) ?>
-                        <div class="help-block"></div>
-                    </div>
-
-                    <?php ActiveForm::end(); ?>
-
                 </div>
             </div>
         </div>

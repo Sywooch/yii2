@@ -96,7 +96,7 @@ use yii\bootstrap\Modal;
     <script>
         <?php $this->beginBlock('js') ?>
         var ue = UE.getEditor('goods-content',{
-            initialFrameWidth:800,
+            //initialFrameWidth:800,
             initialFrameHeight:250
         });
         $("#uploader").click(function(){

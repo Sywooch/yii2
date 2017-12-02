@@ -45,7 +45,7 @@ use yii\widgets\ActiveForm;
 <?php $this->registerJsFile('@web/plug-in/ueditor/ueditor.all.js',['depends'=>['backend\assets\AppAsset'],'position' => \yii\web\View::POS_HEAD]);?>
 <script type="text/javascript">
     var ue = UE.getEditor('page-content',{
-        initialFrameWidth:800,
+        //initialFrameWidth:100%,
         initialFrameHeight:250
     });
 </script>

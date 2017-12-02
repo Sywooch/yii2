@@ -92,7 +92,7 @@ use kartik\widgets\ColorInput;
     <script>
         <?php $this->beginBlock('js') ?>
         var ue = UE.getEditor('article-content',{
-            initialFrameWidth:800,
+            //initialFrameWidth:800,
             initialFrameHeight:250
         });
         <?php $this->endBlock(); ?>
