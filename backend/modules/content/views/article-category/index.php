@@ -41,10 +41,10 @@ $this->params['breadcrumbs'][] = '<i class="fa fa fa-navicon"></i> '.$this->titl
                 }
             ],
             'action',
-            //'lft',
-            //'rgt',
-            //'parent',
-            //'depth',
+            'lft',
+            'rgt',
+            'parent',
+            'depth',
             [
                 'attribute'=>'created_at',
                 'format'=>['datetime','php:Y-m-d H:i:s'],

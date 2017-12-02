@@ -106,55 +106,61 @@ class ArticleCategoryController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
+        if(Yii::$app->request->isPost) {
+            $old = $model->oldAttributes;
             $transaction = Yii::$app->db->beginTransaction();
-            try{
-                if($model->parent == $model->getOldAttribute('parent')){
+            try {
+                $parentId = Yii::$app->request->post('ArticleCategory')['parent'];
+                if ($parentId == $old['parent']) {
+                    $model->load(Yii::$app->request->post());
                     $model->save();
-                }else if($model->parent == 0){
-                    $model->update();
-                    $treeArticleCategory = ArticleCategory::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-                    $treeArticleCategory = ArrayHelper::toArray($treeArticleCategory);
-                    $treeId = ArrayHelper::getColumn($treeArticleCategory,'id');
-                    ArticleCategory::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1)],'`lft`>:lft',[':lft'=>$model->rgt]);
-                    ArticleCategory::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'`rgt`>:rgt',[':rgt'=>$model->rgt]);
-                    $max = ArticleCategory::find()->where("`id` not in (".implode(',',$treeId).")")->orderBy('`rgt` DESC')->one();
-                    ArticleCategory::updateAllCounters(['lft'=>$max->rgt-$model->lft+1,'rgt'=>$max->rgt-$model->lft+1,'depth'=>-($model->depth-1)],"`id` in (".implode(',',$treeId).")");
-                }else{
-                    $parent = ArticleCategory::findOne($model->parent);
-                    $exist = ArticleCategory::find()->where('`lft` <:lft and `rgt` >:rgt and `id` = :id',[':lft'=>$model->lft,':rgt'=>$model->rgt,':id'=>$parent->id])->one();
-                    $treeArticleCategory = ArticleCategory::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-                    $treeArticleCategory = ArrayHelper::toArray($treeArticleCategory);
-                    $treeId = ArrayHelper::getColumn($treeArticleCategory,'id');
-
-                    if($model->id==$parent->parent||$treeArticleCategory==null||in_array($model->parent,$treeId)||$exist!=null){
-                        Yii::$app->session->setFlash('danger','信息提交失败！');
+                } else if ($parentId == 0) {
+                    $tree = ArrayHelper::getColumn(ArticleCategory::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
+                    ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1)], '`lft`>:lft', [':lft' => $model->rgt]);
+                    ArticleCategory::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`rgt`>:rgt', [':rgt' => $model->rgt]);
+                    $max = ArticleCategory::find()->where(['not in', 'id', $tree])->orderBy('`rgt` DESC')->one();
+                    ArticleCategory::updateAllCounters(['lft' => $max->rgt - $model->lft + 1, 'rgt' => $max->rgt - $model->lft + 1, 'depth' => -($model->depth - 1)], ['in', 'id', $tree]);
+                    $model->load(Yii::$app->request->post());
+                    $model->save();
+                } else {
+                    $parent = ArticleCategory::findOne($parentId);
+                    $exist = ArticleCategory::find()->where('`lft` <:lft and `rgt` >:rgt and `id` = :id', [':lft' => $model->lft, ':rgt' => $model->rgt, ':id' => $parent->id])->one();
+                    $tree = ArrayHelper::getColumn(ArticleCategory::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
+                    if (empty($tree) || in_array($parent->id, $tree)) {
+                        Yii::$app->session->setFlash('danger', '信息提交失败！');
                         return $this->redirect(['index']);
-                    }else{
-                        $model->save();
-                        if($parent->lft>$model->lft){
-                            $between=$parent->rgt-$model->rgt-1;
-                            ArticleCategory::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1)],'`lft`>:lft and `lft`<'.$parent->rgt,[':lft'=>$model->rgt]);
-                            ArticleCategory::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'`rgt`>:rgt and `rgt`<'.$parent->rgt,[':rgt'=>$model->rgt]);
-                        }else{
-                            $between=$parent->rgt-$model->lft;
-                            ArticleCategory::updateAllCounters(['lft'=>$model->rgt-$model->lft+1],'`lft`>:lft and `lft`<'.$model->lft,[':lft'=>$parent->rgt]);
-                            ArticleCategory::updateAllCounters(['rgt'=>$model->rgt-$model->lft+1],'`rgt`>=:rgt and `rgt`<'.$model->lft,[':rgt'=>$parent->rgt]);
-
+                    }
+                    if ($exist == null) {
+                        if ($parent->lft > $model->lft) {
+                            ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1)], '`lft`>:lft and `lft`<' . $parent->rgt, [':lft' => $model->rgt]);
+                            ArticleCategory::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`rgt`>:rgt and `rgt`<' . $parent->rgt, [':rgt' => $model->rgt]);
+                            ArticleCategory::updateAllCounters(['lft' => $parent->rgt - $model->rgt - 1, 'rgt' => $parent->rgt - $model->rgt - 1, 'depth' => $parent->depth - $model->depth + 1], ['in', 'id', $tree]);
+                        } else {
+                            ArticleCategory::updateAllCounters(['lft' => $model->rgt - $model->lft + 1], '`lft`>:lft and `lft`<' . $model->lft, [':lft' => $parent->rgt]);
+                            ArticleCategory::updateAllCounters(['rgt' => $model->rgt - $model->lft + 1], '`rgt`>=:rgt and `rgt`<' . $model->lft, [':rgt' => $parent->rgt]);
+                            ArticleCategory::updateAllCounters(['lft' => $parent->rgt - $model->lft, 'rgt' => $parent->rgt - $model->lft, 'depth' => $parent->depth - $model->depth + 1], ['in', 'id', $tree]);
                         }
-                        ArticleCategory::updateAllCounters(['lft'=>$between,'rgt'=>$between,'depth'=>$parent->depth-$model->depth+1],"`id` in (".implode(',',$treeId).")");
+                        $model->load(Yii::$app->request->post());
+                        $model->save();
+                    } else {
+                        $oldParent =  ArticleCategory::findOne($old['parent']);
+                        ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$model->lft.' and `rgt` < '.$oldParent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        ArticleCategory::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`lft`<'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        ArticleCategory::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`id`=:id', [':id' => $oldParent->id]);
+                        ArticleCategory::updateAllCounters(['lft' => $parent->rgt - $model->rgt-1, 'rgt' => $parent->rgt - $model->rgt-1, 'depth' => ($parent->depth - $model->depth + 1)], '`lft` >=:lft and `rgt` <=:rgt', [':lft' => $model->lft, ':rgt' => $model->rgt]);
+                        $model->load(Yii::$app->request->post());
+                        $model->save();
                     }
                 }
                 $transaction->commit();
-                Yii::$app->session->setFlash('info','信息提交成功！');
-
-            }catch(Exception $e) {
+                Yii::$app->session->setFlash('info', '信息提交成功！');
+            } catch (Exception $e) {
                 $transaction->rollback();
-                Yii::$app->session->setFlash('danger','信息提交失败！');
+                Yii::$app->session->setFlash('danger', '信息提交失败！');
             }
             return $this->redirect(['index']);
-
-        } else {
+        }else {
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -168,12 +174,9 @@ class ArticleCategoryController extends Controller
         try{
             $model = $this->findModel($id);
             $previousArticleCategory = ArticleCategory::findOne(['rgt'=>$model->lft-1]);
-            $treeArticleCategory = ArticleCategory::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-
-            $treeArticleCategory = ArrayHelper::toArray($treeArticleCategory);
-            $treeId = ArrayHelper::getColumn($treeArticleCategory,'id');
+            $tree = ArrayHelper::getColumn(ArticleCategory::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
             ArticleCategory::updateAllCounters(['lft'=>$model->rgt-$model->lft+1,'rgt'=>$model->rgt-$model->lft+1],'`lft`>=:lft and `rgt`<=:rgt',[':lft'=>$previousArticleCategory->lft,':rgt'=>$previousArticleCategory->rgt]);
-            ArticleCategory::updateAllCounters(['lft'=>-($previousArticleCategory->rgt-$previousArticleCategory->lft+1),'rgt'=>-($previousArticleCategory->rgt-$previousArticleCategory->lft+1)],"`id` in (".implode(',',$treeId).")");
+            ArticleCategory::updateAllCounters(['lft'=>-($previousArticleCategory->rgt-$previousArticleCategory->lft+1),'rgt'=>-($previousArticleCategory->rgt-$previousArticleCategory->lft+1)],['in', 'id', $tree]);
             $transaction->commit();
 
             Yii::$app->session->setFlash('info','排序提交成功！');
@@ -191,12 +194,10 @@ class ArticleCategoryController extends Controller
         try{
             $model = $this->findModel($id);
             $nextArticleCategory = ArticleCategory::findOne(['lft'=>$model->rgt+1]);
-            $treeArticleCategory = ArticleCategory::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-            $treeArticleCategory = ArrayHelper::toArray($treeArticleCategory);
-            $treeId = ArrayHelper::getColumn($treeArticleCategory,'id');
+            $tree = ArrayHelper::getColumn(ArticleCategory::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
 
             ArticleCategory::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1),'rgt'=>-($model->rgt-$model->lft+1)],'`lft`>=:lft and `rgt`<=:rgt',[':lft'=>$nextArticleCategory->lft,':rgt'=>$nextArticleCategory->rgt]);
-            ArticleCategory::updateAllCounters(['lft'=>$nextArticleCategory->rgt-$nextArticleCategory->lft+1,'rgt'=>$nextArticleCategory->rgt-$nextArticleCategory->lft+1],"id in (".implode(',',$treeId).")");
+            ArticleCategory::updateAllCounters(['lft'=>$nextArticleCategory->rgt-$nextArticleCategory->lft+1,'rgt'=>$nextArticleCategory->rgt-$nextArticleCategory->lft+1],['in', 'id', $tree]);
             $transaction->commit();
 
             Yii::$app->session->setFlash('info','排序提交成功！');
@@ -247,10 +248,10 @@ class ArticleCategoryController extends Controller
             ArticleCategory::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'rgt>:rgt',[':rgt'=>$model->rgt]);
             $transaction->commit();
 
-            Yii::$app->session->setFlash('info','菜单删除成功！');
+            Yii::$app->session->setFlash('info','分类删除成功！');
         }catch(Exception $e) {
             $transaction->rollback();
-            Yii::$app->session->setFlash('danger','菜单删除失败！');
+            Yii::$app->session->setFlash('danger','分类删除失败！');
         }
         return $this->redirect(['index']);
     }

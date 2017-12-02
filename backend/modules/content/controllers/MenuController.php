@@ -107,53 +107,60 @@ class MenuController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
+        if(Yii::$app->request->isPost) {
+            $old = $model->oldAttributes;
             $transaction = Yii::$app->db->beginTransaction();
-            try{
-                if($model->parent == $model->getOldAttribute('parent')){
+            try {
+                $parentId = Yii::$app->request->post('Menu')['parent'];
+                if ($parentId == $old['parent']) {
+                    $model->load(Yii::$app->request->post());
                     $model->save();
-                }else if($model->parent == 0){
-                    $model->update();
-                    $treeMenu = Menu::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-                    $treeMenu = ArrayHelper::toArray($treeMenu);
-                    $treeId = ArrayHelper::getColumn($treeMenu,'id');
-                    Menu::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1)],'`lft`>:lft',[':lft'=>$model->rgt]);
-                    Menu::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'`rgt`>:rgt',[':rgt'=>$model->rgt]);
-                    $max = Menu::find()->where("`id` not in (".implode(',',$treeId).")")->orderBy('`rgt` DESC')->one();
-                    Menu::updateAllCounters(['lft'=>$max->rgt-$model->lft+1,'rgt'=>$max->rgt-$model->lft+1,'depth'=>-($model->depth-1)],"`id` in (".implode(',',$treeId).")");
-                }else{
-                    $parent = Menu::findOne($model->parent);
-                    $exist = Menu::find()->where('`lft` <:lft and `rgt` >:rgt and `id` = :id',[':lft'=>$model->lft,':rgt'=>$model->rgt,':id'=>$parent->id])->one();
-                    $treeMenu = Menu::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-                    $treeMenu = ArrayHelper::toArray($treeMenu);
-                    $treeId = ArrayHelper::getColumn($treeMenu,'id');
-
-                    if($model->id==$parent->parent||$treeMenu==null||in_array($model->parent,$treeId)||$exist!=null){
-                        Yii::$app->session->setFlash('danger','菜单更新失败！');
+                } else if ($parentId == 0) {
+                    $tree = ArrayHelper::getColumn(Menu::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
+                    Menu::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1)], '`lft`>:lft', [':lft' => $model->rgt]);
+                    Menu::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`rgt`>:rgt', [':rgt' => $model->rgt]);
+                    $max = Menu::find()->where(['not in', 'id', $tree])->orderBy('`rgt` DESC')->one();
+                    Menu::updateAllCounters(['lft' => $max->rgt - $model->lft + 1, 'rgt' => $max->rgt - $model->lft + 1, 'depth' => -($model->depth - 1)], ['in', 'id', $tree]);
+                    $model->load(Yii::$app->request->post());
+                    $model->save();
+                } else {
+                    $parent = Menu::findOne($parentId);
+                    $exist = Menu::find()->where('`lft` <:lft and `rgt` >:rgt and `id` = :id', [':lft' => $model->lft, ':rgt' => $model->rgt, ':id' => $parent->id])->one();
+                    $tree = ArrayHelper::getColumn(Menu::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
+                    if (empty($tree) || in_array($parent->id, $tree)) {
+                        Yii::$app->session->setFlash('danger', '信息提交失败！');
                         return $this->redirect(['index']);
-                    }else{
-                        $model->save();
-                        if($parent->lft>$model->lft){
-                            $between=$parent->rgt-$model->rgt-1;
-                            Menu::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1)],'`lft`>:lft and `lft`<'.$parent->rgt,[':lft'=>$model->rgt]);
-                            Menu::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'`rgt`>:rgt and `rgt`<'.$parent->rgt,[':rgt'=>$model->rgt]);
-                        }else{
-                            $between=$parent->rgt-$model->lft;
-                            Menu::updateAllCounters(['lft'=>$model->rgt-$model->lft+1],'`lft`>:lft and `lft`<'.$model->lft,[':lft'=>$parent->rgt]);
-                            Menu::updateAllCounters(['rgt'=>$model->rgt-$model->lft+1],'`rgt`>=:rgt and `rgt`<'.$model->lft,[':rgt'=>$parent->rgt]);
-
+                    }
+                    if ($exist == null) {
+                        if ($parent->lft > $model->lft) {
+                            Menu::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1)], '`lft`>:lft and `lft`<' . $parent->rgt, [':lft' => $model->rgt]);
+                            Menu::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`rgt`>:rgt and `rgt`<' . $parent->rgt, [':rgt' => $model->rgt]);
+                            Menu::updateAllCounters(['lft' => $parent->rgt - $model->rgt - 1, 'rgt' => $parent->rgt - $model->rgt - 1, 'depth' => $parent->depth - $model->depth + 1], ['in', 'id', $tree]);
+                        } else {
+                            Menu::updateAllCounters(['lft' => $model->rgt - $model->lft + 1], '`lft`>:lft and `lft`<' . $model->lft, [':lft' => $parent->rgt]);
+                            Menu::updateAllCounters(['rgt' => $model->rgt - $model->lft + 1], '`rgt`>=:rgt and `rgt`<' . $model->lft, [':rgt' => $parent->rgt]);
+                            Menu::updateAllCounters(['lft' => $parent->rgt - $model->lft, 'rgt' => $parent->rgt - $model->lft, 'depth' => $parent->depth - $model->depth + 1], ['in', 'id', $tree]);
                         }
-                        Menu::updateAllCounters(['lft'=>$between,'rgt'=>$between,'depth'=>$parent->depth-$model->depth+1],"`id` in (".implode(',',$treeId).")");
+                        $model->load(Yii::$app->request->post());
+                        $model->save();
+                    } else {
+                        $oldParent =  Menu::findOne($old['parent']);
+                        Menu::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$model->lft.' and `rgt` < '.$oldParent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        Menu::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`lft`<'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        Menu::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        Menu::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`id`=:id', [':id' => $oldParent->id]);
+                        Menu::updateAllCounters(['lft' => $parent->rgt - $model->rgt-1, 'rgt' => $parent->rgt - $model->rgt-1, 'depth' => ($parent->depth - $model->depth + 1)], '`lft` >=:lft and `rgt` <=:rgt', [':lft' => $model->lft, ':rgt' => $model->rgt]);
+                        $model->load(Yii::$app->request->post());
+                        $model->save();
                     }
                 }
                 $transaction->commit();
-                Yii::$app->session->setFlash('info','菜单更新成功！');
-            }catch(Exception $e) {
+                Yii::$app->session->setFlash('info', '信息提交成功！');
+            } catch (Exception $e) {
                 $transaction->rollback();
-                Yii::$app->session->setFlash('danger','菜单更新失败！');
+                Yii::$app->session->setFlash('danger', '信息提交失败！');
             }
             return $this->redirect(['index']);
-
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -168,12 +175,9 @@ class MenuController extends Controller
         try{
             $model = $this->findModel($id);
             $previousMenu = Menu::findOne(['rgt'=>$model->lft-1]);
-            $treeMenu = Menu::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-
-            $treeMenu = ArrayHelper::toArray($treeMenu);
-            $treeId = ArrayHelper::getColumn($treeMenu,'id');
+            $tree = ArrayHelper::getColumn(Menu::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
             Menu::updateAllCounters(['lft'=>$model->rgt-$model->lft+1,'rgt'=>$model->rgt-$model->lft+1],'`lft`>=:lft and `rgt`<=:rgt',[':lft'=>$previousMenu->lft,':rgt'=>$previousMenu->rgt]);
-            Menu::updateAllCounters(['lft'=>-($previousMenu->rgt-$previousMenu->lft+1),'rgt'=>-($previousMenu->rgt-$previousMenu->lft+1)],"`id` in (".implode(',',$treeId).")");
+            Menu::updateAllCounters(['lft'=>-($previousMenu->rgt-$previousMenu->lft+1),'rgt'=>-($previousMenu->rgt-$previousMenu->lft+1)],['in', 'id', $tree]);
             $transaction->commit();
 
             Yii::$app->session->setFlash('info','排序提交成功！');
@@ -191,12 +195,10 @@ class MenuController extends Controller
         try{
             $model = $this->findModel($id);
             $nextMenu = Menu::findOne(['lft'=>$model->rgt+1]);
-            $treeMenu = Menu::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-            $treeMenu = ArrayHelper::toArray($treeMenu);
-            $treeId = ArrayHelper::getColumn($treeMenu,'id');
+            $tree = ArrayHelper::getColumn(Menu::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
 
             Menu::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1),'rgt'=>-($model->rgt-$model->lft+1)],'`lft`>=:lft and `rgt`<=:rgt',[':lft'=>$nextMenu->lft,':rgt'=>$nextMenu->rgt]);
-            Menu::updateAllCounters(['lft'=>$nextMenu->rgt-$nextMenu->lft+1,'rgt'=>$nextMenu->rgt-$nextMenu->lft+1],"id in (".implode(',',$treeId).")");
+            Menu::updateAllCounters(['lft'=>$nextMenu->rgt-$nextMenu->lft+1,'rgt'=>$nextMenu->rgt-$nextMenu->lft+1],['in', 'id', $tree]);
             $transaction->commit();
 
             Yii::$app->session->setFlash('info','排序提交成功！');

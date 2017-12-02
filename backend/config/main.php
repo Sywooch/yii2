@@ -83,7 +83,8 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['info','error', 'warning'],
+                    'categories' => ['yii\db\Command::execute'],
                 ],
 //                [
 //                    'class' => 'yii\log\DbTarget',

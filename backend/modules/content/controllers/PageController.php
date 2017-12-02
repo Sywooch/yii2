@@ -107,53 +107,60 @@ class PageController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
+        if(Yii::$app->request->isPost) {
+            $old = $model->oldAttributes;
             $transaction = Yii::$app->db->beginTransaction();
-            try{
-                if($model->parent == $model->getOldAttribute('parent')){
+            try {
+                $parentId = Yii::$app->request->post('Page')['parent'];
+                if ($parentId == $old['parent']) {
+                    $model->load(Yii::$app->request->post());
                     $model->save();
-                }else if($model->parent == 0){
-                    $model->update();
-                    $treePage = Page::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-                    $treePage = ArrayHelper::toArray($treePage);
-                    $treeId = ArrayHelper::getColumn($treePage,'id');
-                    Page::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1)],'`lft`>:lft',[':lft'=>$model->rgt]);
-                    Page::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'`rgt`>:rgt',[':rgt'=>$model->rgt]);
-                    $max = Page::find()->where("`id` not in (".implode(',',$treeId).")")->orderBy('`rgt` DESC')->one();
-                    Page::updateAllCounters(['lft'=>$max->rgt-$model->lft+1,'rgt'=>$max->rgt-$model->lft+1,'depth'=>-($model->depth-1)],"`id` in (".implode(',',$treeId).")");
-                }else{
-                    $parent = Page::findOne($model->parent);
-                    $exist = Page::find()->where('`lft` <:lft and `rgt` >:rgt and `id` = :id',[':lft'=>$model->lft,':rgt'=>$model->rgt,':id'=>$parent->id])->one();
-                    $treePage = Page::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-                    $treePage = ArrayHelper::toArray($treePage);
-                    $treeId = ArrayHelper::getColumn($treePage,'id');
-
-                    if($model->id==$parent->parent||$treePage==null||in_array($model->parent,$treeId)||$exist!=null){
-                        Yii::$app->session->setFlash('danger','菜单更新失败！');
+                } else if ($parentId == 0) {
+                    $tree = ArrayHelper::getColumn(Page::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
+                    Page::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1)], '`lft`>:lft', [':lft' => $model->rgt]);
+                    Page::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`rgt`>:rgt', [':rgt' => $model->rgt]);
+                    $max = Page::find()->where(['not in', 'id', $tree])->orderBy('`rgt` DESC')->one();
+                    Page::updateAllCounters(['lft' => $max->rgt - $model->lft + 1, 'rgt' => $max->rgt - $model->lft + 1, 'depth' => -($model->depth - 1)], ['in', 'id', $tree]);
+                    $model->load(Yii::$app->request->post());
+                    $model->save();
+                } else {
+                    $parent = Page::findOne($parentId);
+                    $exist = Page::find()->where('`lft` <:lft and `rgt` >:rgt and `id` = :id', [':lft' => $model->lft, ':rgt' => $model->rgt, ':id' => $parent->id])->one();
+                    $tree = ArrayHelper::getColumn(Page::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
+                    if (empty($tree) || in_array($parent->id, $tree)) {
+                        Yii::$app->session->setFlash('danger', '信息提交失败！');
                         return $this->redirect(['index']);
-                    }else{
-                        $model->save();
-                        if($parent->lft>$model->lft){
-                            $between=$parent->rgt-$model->rgt-1;
-                            Page::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1)],'`lft`>:lft and `lft`<'.$parent->rgt,[':lft'=>$model->rgt]);
-                            Page::updateAllCounters(['rgt'=>-($model->rgt-$model->lft+1)],'`rgt`>:rgt and `rgt`<'.$parent->rgt,[':rgt'=>$model->rgt]);
-                        }else{
-                            $between=$parent->rgt-$model->lft;
-                            Page::updateAllCounters(['lft'=>$model->rgt-$model->lft+1],'`lft`>:lft and `lft`<'.$model->lft,[':lft'=>$parent->rgt]);
-                            Page::updateAllCounters(['rgt'=>$model->rgt-$model->lft+1],'`rgt`>=:rgt and `rgt`<'.$model->lft,[':rgt'=>$parent->rgt]);
-
+                    }
+                    if ($exist == null) {
+                        if ($parent->lft > $model->lft) {
+                            Page::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1)], '`lft`>:lft and `lft`<' . $parent->rgt, [':lft' => $model->rgt]);
+                            Page::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`rgt`>:rgt and `rgt`<' . $parent->rgt, [':rgt' => $model->rgt]);
+                            Page::updateAllCounters(['lft' => $parent->rgt - $model->rgt - 1, 'rgt' => $parent->rgt - $model->rgt - 1, 'depth' => $parent->depth - $model->depth + 1], ['in', 'id', $tree]);
+                        } else {
+                            Page::updateAllCounters(['lft' => $model->rgt - $model->lft + 1], '`lft`>:lft and `lft`<' . $model->lft, [':lft' => $parent->rgt]);
+                            Page::updateAllCounters(['rgt' => $model->rgt - $model->lft + 1], '`rgt`>=:rgt and `rgt`<' . $model->lft, [':rgt' => $parent->rgt]);
+                            Page::updateAllCounters(['lft' => $parent->rgt - $model->lft, 'rgt' => $parent->rgt - $model->lft, 'depth' => $parent->depth - $model->depth + 1], ['in', 'id', $tree]);
                         }
-                        Page::updateAllCounters(['lft'=>$between,'rgt'=>$between,'depth'=>$parent->depth-$model->depth+1],"`id` in (".implode(',',$treeId).")");
+                        $model->load(Yii::$app->request->post());
+                        $model->save();
+                    } else {
+                        $oldParent =  Page::findOne($old['parent']);
+                        Page::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$model->lft.' and `rgt` < '.$oldParent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        Page::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`lft`<'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        Page::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        Page::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`id`=:id', [':id' => $oldParent->id]);
+                        Page::updateAllCounters(['lft' => $parent->rgt - $model->rgt-1, 'rgt' => $parent->rgt - $model->rgt-1, 'depth' => ($parent->depth - $model->depth + 1)], '`lft` >=:lft and `rgt` <=:rgt', [':lft' => $model->lft, ':rgt' => $model->rgt]);
+                        $model->load(Yii::$app->request->post());
+                        $model->save();
                     }
                 }
                 $transaction->commit();
-                Yii::$app->session->setFlash('info','菜单更新成功！');
-            }catch(Exception $e) {
+                Yii::$app->session->setFlash('info', '信息提交成功！');
+            } catch (Exception $e) {
                 $transaction->rollback();
-                Yii::$app->session->setFlash('danger','菜单更新失败！');
+                Yii::$app->session->setFlash('danger', '信息提交失败！');
             }
             return $this->redirect(['index']);
-
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -168,12 +175,9 @@ class PageController extends Controller
         try{
             $model = $this->findModel($id);
             $previousPage = Page::findOne(['rgt'=>$model->lft-1]);
-            $treePage = Page::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-
-            $treePage = ArrayHelper::toArray($treePage);
-            $treeId = ArrayHelper::getColumn($treePage,'id');
+            $tree = ArrayHelper::getColumn(Page::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
             Page::updateAllCounters(['lft'=>$model->rgt-$model->lft+1,'rgt'=>$model->rgt-$model->lft+1],'`lft`>=:lft and `rgt`<=:rgt',[':lft'=>$previousPage->lft,':rgt'=>$previousPage->rgt]);
-            Page::updateAllCounters(['lft'=>-($previousPage->rgt-$previousPage->lft+1),'rgt'=>-($previousPage->rgt-$previousPage->lft+1)],"`id` in (".implode(',',$treeId).")");
+            Page::updateAllCounters(['lft'=>-($previousPage->rgt-$previousPage->lft+1),'rgt'=>-($previousPage->rgt-$previousPage->lft+1)],['in', 'id', $tree]);
             $transaction->commit();
 
             Yii::$app->session->setFlash('info','排序提交成功！');
@@ -191,12 +195,9 @@ class PageController extends Controller
         try{
             $model = $this->findModel($id);
             $nextPage = Page::findOne(['lft'=>$model->rgt+1]);
-            $treePage = Page::find()->where('`lft` >="'.$model->lft.'" and `rgt` <="'.$model->rgt.'"')->all();
-            $treePage = ArrayHelper::toArray($treePage);
-            $treeId = ArrayHelper::getColumn($treePage,'id');
-
+            $tree = ArrayHelper::getColumn(Page::find()->where('`lft` >="' . $model->lft . '" and `rgt` <="' . $model->rgt . '"')->asArray()->all(), 'id');
             Page::updateAllCounters(['lft'=>-($model->rgt-$model->lft+1),'rgt'=>-($model->rgt-$model->lft+1)],'`lft`>=:lft and `rgt`<=:rgt',[':lft'=>$nextPage->lft,':rgt'=>$nextPage->rgt]);
-            Page::updateAllCounters(['lft'=>$nextPage->rgt-$nextPage->lft+1,'rgt'=>$nextPage->rgt-$nextPage->lft+1],"id in (".implode(',',$treeId).")");
+            Page::updateAllCounters(['lft'=>$nextPage->rgt-$nextPage->lft+1,'rgt'=>$nextPage->rgt-$nextPage->lft+1],['in', 'id', $tree]);
             $transaction->commit();
 
             Yii::$app->session->setFlash('info','排序提交成功！');
