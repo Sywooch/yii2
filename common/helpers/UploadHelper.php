@@ -34,14 +34,14 @@ class UploadHelper
             $category =  $category=== null?'images':$category;
             $path = '/'.$category;
             $path.='/'.date('Y').'/'.date('m').'/'.date('d');
-            if(!is_dir(Yii::$app->params['uploads'].$path)){
+            if(!is_dir(Yii::getAlias('@uploads').$path)){
                 $mask = umask(0);
-                mkdir(Yii::$app->params['uploads'].$path,0777,true);
+                mkdir(Yii::getAlias('@uploads').$path,0777,true);
                 umask($mask);
             }
             $path.='/'.$image->name;
-            if($image->saveAs(Yii::$app->params['uploads'].$path,true)){
-                $info = getimagesize(Yii::$app->params['uploads'].$path);
+            if($image->saveAs(Yii::getAlias('@uploads').$path,true)){
+                $info = getimagesize(Yii::getAlias('@uploads').$path);
 
                 $picture = new Picture;
                 $picture->loadDefaultValues();
@@ -95,17 +95,17 @@ class UploadHelper
             $category =  $category=== null?'images':$category;
             $path = '/'.$category;
             $path.='/'.date('Y').'/'.date('m').'/'.date('d');
-            if(!is_dir(Yii::$app->params['uploads'].$path)){
+            if(!is_dir(Yii::getAlias('@uploads').$path)){
                 $mask = umask(0);
-                mkdir(Yii::$app->params['uploads'].$path,0777,true);
+                mkdir(Yii::getAlias('@uploads').$path,0777,true);
                 umask($mask);
             }
             $path.='/'.$name;
 
-            $handle = fopen(Yii::$app->params['uploads'].$path, 'w');
+            $handle = fopen(Yii::getAlias('@uploads').$path, 'w');
             if(fwrite($handle, $result)!=false) {
 
-                $info = getimagesize(Yii::$app->params['uploads'] . $path);
+                $info = getimagesize(Yii::getAlias('@uploads') . $path);
 
                 $picture = new Picture;
                 $picture->loadDefaultValues();
@@ -116,7 +116,7 @@ class UploadHelper
                 $picture->ratio = sprintf("%.2f", $info['0'] / $info['1']);
                 $picture->path = $path;
                 $picture->type = $header['Content-Type'];
-                $picture->file_size = filesize(Yii::$app->params['uploads'] . $path);
+                $picture->file_size = filesize(Yii::getAlias('@uploads') . $path);
                 $picture->status = Picture::STATUS_DISABLE;
                 $picture->source = Picture::SOURCE_BACKEND;
                 $picture->user_id = Yii::$app->user->id;

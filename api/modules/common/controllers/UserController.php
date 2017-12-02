@@ -1,6 +1,6 @@
 <?php
 
-namespace api\modules\v1\controllers;
+namespace api\modules\common\controllers;
 
 use yii;
 use common\models\User;
@@ -46,7 +46,7 @@ class UserController extends RangerController implements RangerInterface
             RangerException::throwException(RangerException::APP_ERROR_PASSWORD);
         }
         $accessToken = Yii::$app->security->generateRandomString();
-        $duration = 3600*24*14;
+        $duration = 3600*24*30;
         Yii::$app->cache->set($accessToken, $user->id, $duration);
         Yii::$app->user->login($user, $duration);
         $result = $user->attributes;

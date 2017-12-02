@@ -16,7 +16,7 @@ class JobController extends Controller
     {
         $id = Yii::$app->queue->push(new DownloadJob([
             'url' => 'http://www.baidu.com/img/baidu_jgylogo3.gif',
-            'file' => Yii::$app->params['uploads'].'/job.jpg',
+            'file' => Yii::getAlias('@uploads').'/job.jpg',
         ]));
         echo '成功加入队列，当前ID为'.$id;
     }

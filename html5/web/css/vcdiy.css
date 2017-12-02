@@ -1,0 +1,20 @@
+.navbar-inverse{
+    background:#4f4f4f;
+}
+section.row{
+    margin-top:14px;
+}
+section.row.masthead{
+    padding:70px 0 20px 0;
+    background:#f5f5f5;
+}
+
+section.row.about small{
+    color: #ffffff;
+}
+
+section.row.about{
+    background:#7bae11;!important;
+    color:#ffffff;
+    padding:20px 0 20px 0;
+}
