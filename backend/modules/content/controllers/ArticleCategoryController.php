@@ -144,11 +144,11 @@ class ArticleCategoryController extends Controller
                         $model->save();
                     } else {
                         $oldParent =  ArticleCategory::findOne($old['parent']);
-                        ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$model->lft.' and `rgt` < '.$oldParent->rgt.' and  `rgt` > '.$oldParent->rgt);
+                        ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$model->lft.' and `rgt` < '.$oldParent->rgt);
                         ArticleCategory::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`lft`<'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
                         ArticleCategory::updateAllCounters(['lft' => -($model->rgt - $model->lft + 1),'rgt' => -($model->rgt - $model->lft + 1)], '`lft`>'.$oldParent->lft.' and `rgt` < '.$parent->rgt.' and  `rgt` > '.$oldParent->rgt);
                         ArticleCategory::updateAllCounters(['rgt' => -($model->rgt - $model->lft + 1)], '`id`=:id', [':id' => $oldParent->id]);
-                        ArticleCategory::updateAllCounters(['lft' => $parent->rgt - $model->rgt-1, 'rgt' => $parent->rgt - $model->rgt-1, 'depth' => ($parent->depth - $model->depth + 1)], '`lft` >=:lft and `rgt` <=:rgt', [':lft' => $model->lft, ':rgt' => $model->rgt]);
+                        ArticleCategory::updateAllCounters(['lft' => $parent->rgt - $model->rgt-1, 'rgt' => $parent->rgt - $model->rgt-1, 'depth' => ($parent->depth - $model->depth + 1)], ['in', 'id', $tree]);
                         $model->load(Yii::$app->request->post());
                         $model->save();
                     }
