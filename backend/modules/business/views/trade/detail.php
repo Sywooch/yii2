@@ -9,11 +9,11 @@
             <?php
             if(!empty($model->orders)){
                 foreach($model->orders as $key => $order) {
-                    echo '<div class="img-thumbnail img-rounded text-center">';
+                    echo '<div class="text-center">';
                     if (!empty($order->picture_url)) {
-                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture_url, ['width' => '98', 'height' => '98', 'style' => 'padding:2px;']);
+                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture_url, ['class' => 'img-responsive img-thumbnail']);
                     } else {
-                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture->path, ['width' => '98', 'height' => '98', 'style' => 'padding:2px;']);
+                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture->path, ['class' => 'img-responsive img-thumbnail']);
                     }
                     echo $key == count($model->orders) - 1 ? '<div class="small text-muted">仅供参考</div>' : '';
                     echo '</div>';
