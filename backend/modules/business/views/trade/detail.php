@@ -1,19 +1,19 @@
 <?php
     use yii\helpers\Html;
 ?>
-<div class="kv-detail-content" style="padding:0px 50px;overflow:hidden">
+<div class="kv-detail-content" style="overflow:hidden">
     <h4>交易信息 <small>NO:<?=$model->trade_no;?></small></h4>
 
     <div class="row">
-        <div class="col-sm-1">
+        <div class="col-sm-1 col-sm-offset-1">
             <?php
             if(!empty($model->orders)){
                 foreach($model->orders as $key => $order) {
                     echo '<div class="img-thumbnail img-rounded text-center">';
                     if (!empty($order->picture_url)) {
-                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture_url, ['width' => '60', 'height' => '60', 'style' => 'padding:2px;']);
+                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture_url, ['width' => '98', 'height' => '98', 'style' => 'padding:2px;']);
                     } else {
-                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture->path, ['width' => '60', 'height' => '60', 'style' => 'padding:2px;']);
+                        echo Html::img('http://' . Yii::$app->params['domain']['image'] . $order->picture->path, ['width' => '98', 'height' => '98', 'style' => 'padding:2px;']);
                     }
                     echo $key == count($model->orders) - 1 ? '<div class="small text-muted">仅供参考</div>' : '';
                     echo '</div>';
@@ -21,7 +21,7 @@
             }
             ?>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-7">
             <table class="table table-bordered table-condensed table-hover small kv-table">
                 <tbody>
                 <tr class="danger">
@@ -56,8 +56,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="col-sm-5">
+
             <table class="table table-bordered table-condensed table-hover small kv-table">
                 <tbody>
                 <tr class="success">
@@ -75,20 +74,53 @@
                 if(!empty($model->orders)){
                     foreach($model->orders as $key => $order){
                         echo '<tr>';
-                            echo '<td>'.($key+1).'</td>';
-                            echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_name:'无').'</td>';
-                            echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_no:'无').'</td>';
-                            echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_status:'无').'</td>';
-                            echo '<td>'.$model->contact_name.'</td>';
-                            echo '<td class="text-right">'.$model->contact_phone.'</td>';
-                            echo '</tr>';
-                        }
+                        echo '<td>'.($key+1).'</td>';
+                        echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_name:'无').'</td>';
+                        echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_no:'无').'</td>';
+                        echo '<td>'.(isset($order->logistical)?$order->logistical->logistical_status:'无').'</td>';
+                        echo '<td>'.$model->contact_name.'</td>';
+                        echo '<td class="text-right">'.$model->contact_phone.'</td>';
+                        echo '</tr>';
                     }
+                }
                 ?>
                 <tr class="warning">
                     <th></th>
                     <th>收货人地址</th>
                     <th colspan="4" class="text-right"><?=$model->contact_address; ?></th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-2">
+            <table class="table table-bordered table-condensed table-hover small kv-table">
+                <tbody>
+                <tr class="danger">
+                    <th colspan="2" class="text-center text-danger">订单金额</th>
+                </tr>
+                <tr class="active">
+                    <th>已付金额</th>
+                    <td class="text-right"><?php echo $model->paid_amount;?></td>
+                </tr>
+                <tr class="active">
+                    <th class="active">余额支付金额</th>
+                    <td class="text-right">+ <?php echo $model->balance_amount;?></td>
+                </tr>
+                <tr class="active">
+                    <th class="active">配送费用</th>
+                    <td class="text-right">+ <?php echo $model->logistical_amount;?></td>
+                </tr>
+                <tr class="active">
+                    <th class="active">积分抵用金额</th>
+                    <td class="text-right">+ <?php echo $model->point_amount;?></td>
+                </tr>
+                <tr class="active">
+                    <th class="active">优惠金额</th>
+                    <td class="text-right">- <?php echo $model->discount_amount;?></td>
+                </tr>
+                <tr class="warning">
+                    <th>订单总额</th>
+                    <td class="text-right">= <?php echo $model->total_amount;?></td>
                 </tr>
                 </tbody>
             </table>
