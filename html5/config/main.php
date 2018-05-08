@@ -16,12 +16,12 @@ return [
         'request' => [
             'csrfParam' => '_csrf-html5',
         ],
-        'urlManager'=>array(
+        'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => []
-        ),
+        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [

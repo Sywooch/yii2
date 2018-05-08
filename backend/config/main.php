@@ -34,12 +34,12 @@ return [
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
-        'urlManager'=>array(
+        'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => []
-        ),
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'defaultRoles' => ['guest'],

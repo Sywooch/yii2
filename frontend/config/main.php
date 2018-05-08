@@ -15,12 +15,12 @@ return [
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
-        'urlManager'=>array(
+        'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => []
-        ),
+        ],
         'authClientCollection' => [
             'class' => 'yii\authclient\Collection',
             'clients' => [
