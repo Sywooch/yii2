@@ -60,3 +60,15 @@ $this->params['breadcrumbs'][] = $role->name;
 
 </div>
 
+<!--iCheck js and css-->
+<?php Yii::$app->assetManager->publish('@vendor/almasaeed2010/adminlte/plugins/iCheck');?>
+<?php $url = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/plugins/iCheck');?>
+<?php $this->registerJsFile($url.'/icheck.min.js',['depends'=>['backend\assets\AppAsset'],'position' => \yii\web\View::POS_HEAD]);?>
+<?php $this->registerCssFile($url.'/all.css',['depends'=>['backend\assets\AppAsset'],'position' => \yii\web\View::POS_HEAD]);?>
+<script>
+    $('input').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue',
+        increaseArea: '0%' /* optional */
+    });
+</script>
