@@ -3,9 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
-use backend\components\jobs\DownloadJob;
-use backend\components\jobs\EmailTextJob;
-use backend\components\jobs\EmailHtmlJob;
+use backend\components\job\DownloadJob;
+use backend\components\job\EmailTextJob;
+use backend\components\job\EmailHtmlJob;
 
 /**
  * JobController

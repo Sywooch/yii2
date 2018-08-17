@@ -1,12 +1,12 @@
 <?php
 
-namespace backend\components\jobs;
+namespace backend\components\job;
 
 use Yii;
-use yii\base\Object;
-use yii\queue\Job;
+use yii\base\BaseObject;
+use yii\queue\JobInterface;
 
-class EmailTextJob extends Object implements Job
+class EmailTextJob extends BaseObject implements JobInterface
 {
     public $to;
     public $subject;
